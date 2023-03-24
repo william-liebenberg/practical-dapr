@@ -1,0 +1,54 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33417.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.ShoppingCart.API", "DaprShop.ShoppingCart.API\DaprShop.ShoppingCart.API.csproj", "{6464A5FF-540A-484C-91B7-BBB22E7C219E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Contracts", "DaprShop.Contracts\DaprShop.Contracts.csproj", "{AC9F9A8B-C150-4353-A410-CA4EE786312B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DaprComponents", "DaprComponents", "{F8E749A9-7EFD-401E-85A7-D0D7E1FDC41B}"
+	ProjectSection(SolutionItems) = preProject
+		components\localSecretStore.yaml = components\localSecretStore.yaml
+		my-secrets.json = my-secrets.json
+		components\statestore.yaml = components\statestore.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43EC5F4-345E-4772-9AE2-49F189A8D21A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		my-secrets.json = my-secrets.json
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E47C2AAE-072C-431A-9BFF-415831F5A05A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6464A5FF-540A-484C-91B7-BBB22E7C219E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6464A5FF-540A-484C-91B7-BBB22E7C219E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6464A5FF-540A-484C-91B7-BBB22E7C219E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6464A5FF-540A-484C-91B7-BBB22E7C219E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC9F9A8B-C150-4353-A410-CA4EE786312B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC9F9A8B-C150-4353-A410-CA4EE786312B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC9F9A8B-C150-4353-A410-CA4EE786312B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC9F9A8B-C150-4353-A410-CA4EE786312B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E47C2AAE-072C-431A-9BFF-415831F5A05A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E47C2AAE-072C-431A-9BFF-415831F5A05A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E47C2AAE-072C-431A-9BFF-415831F5A05A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E47C2AAE-072C-431A-9BFF-415831F5A05A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E73B53E0-831A-4D89-9488-C550422E4199}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E47C2AAE-072C-431A-9BFF-415831F5A05A} = {E47C2AAE-072C-431A-9BFF-415831F5A05A}
+	EndGlobalSection
+EndGlobal
