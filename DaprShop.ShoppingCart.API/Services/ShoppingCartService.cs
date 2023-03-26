@@ -16,7 +16,7 @@ public class ShoppingCartService : IShoppingCartService
     private readonly ILogger<ShoppingCartService> _logger;
     private readonly DaprClient _dapr;
 
-    private readonly string _storeName = "shopStore";
+    private readonly string _storeName = "daprshop-statestore";
     private readonly string _pubsubName = "daprshop-pubsub";
     private readonly string _shoppingCartItemsTopic = "daprshop.shoppingcart.items";
 
