@@ -17,17 +17,29 @@ public class ShoppingCartController : ControllerBase
     [HttpGet("{userId}")]
     public async Task<ActionResult<Domain.ShoppingCart>> Get(string userId)
     {
-        Domain.ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCart(userId);
-
-        return Ok(shoppingCart);
+        try
+        {
+            Domain.ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCart(userId);
+            return Ok(shoppingCart);
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpPost("{userId}/items")]
-    public async Task<ActionResult<Domain.ShoppingCart>> Post(string userId, Domain.ShoppingCartItem item)
+    public async Task<ActionResult<Domain.ShoppingCart>> Post(string userId, [FromBody]Contracts.Requests.AddProductItemToCart item)
     {
+        Domain.ShoppingCartItem mappedItem = new(
+            item.ProductId,
+            item.ProductName,
+            item.Price,
+            item.Quantity);
+
         try
         {
-            await _shoppingCartService.AddItemToShoppingCart(userId, item);
+            await _shoppingCartService.AddItemToShoppingCart(userId, mappedItem);
             return Ok();
         }
         catch (Exception ex)

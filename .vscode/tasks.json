@@ -2,12 +2,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build-cart-api",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/DaprShop.ShoppingCart.API/DaprShop.ShoppingCart.API.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-users-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/DaprShop.UserManagement.API/DaprShop.UserManagement.API.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -26,6 +38,18 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "publish Users API",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/DaprShop.UserManagement.API/DaprShop.UserManagement.API.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "watch",
             "command": "dotnet",
             "type": "process",
@@ -36,6 +60,34 @@
                 "${workspaceFolder}"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "cart-api",
+            "appPort": 18000,
+            "appProtocol": "http",
+            "appSsl": true,
+            "label": "dapr-debug-cart-api",
+            "type": "dapr",
+            "dependsOn": "build-cart-api"
+        },
+        {
+            "appId": "cart-api",
+            "label": "daprd-down-cart-api",
+            "type": "daprd-down"
+        },
+        {
+            "appId": "users-api",
+            "appPort": 17000,
+            "appProtocol": "http",
+            "appSsl": true,
+            "label": "dapr-debug-users-api",
+            "type": "dapr",
+            "dependsOn": "build-users-api"
+        },
+        {
+            "appId": "users-api",
+            "label": "daprd-down-users-api",
+            "type": "daprd-down"
         }
     ]
 }

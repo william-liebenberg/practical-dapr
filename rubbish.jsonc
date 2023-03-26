@@ -1,0 +1,50 @@
+{
+            "name": ".NET Launch (Cart API) with Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "launchSettingsProfile": "dapr",
+            "preLaunchTask": "dapr-debug",
+            "postDebugTask": "daprd-down",
+            "program": "${workspaceFolder}/DaprShop.ShoppingCart.API/bin/Debug/net7.0/DaprShop.ShoppingCart.API.dll",
+            "cwd": "${workspaceFolder}/DaprShop.ShoppingCart.API",
+            "args": [
+                "--launch-profile dapr"
+            ],
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+https://\\S+:([0-9]+)",
+                "uriFormat": "https://localhost:%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Launch (Users API) with Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "launchSettingsProfile": "dapr",
+            "preLaunchTask": "dapr-debug",
+            "postDebugTask": "daprd-down",
+            "program": "${workspaceFolder}/DaprShop.UserManagement.API/bin/Debug/net7.0/DaprShop.UserManagement.API.dll",
+            "cwd": "${workspaceFolder}/DaprShop.UserManagement.API",
+            "args": [
+                "--launch-profile dapr"
+            ],
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+https://\\S+:([0-9]+)",
+                "uriFormat": "https://localhost:%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }

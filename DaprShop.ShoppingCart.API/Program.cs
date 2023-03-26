@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 using DaprShop.ShoppingCart.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +16,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseHttpsRedirection();
+// app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

@@ -1,0 +1,29 @@
+GET http://localhost:18000/ShoppingCart/123456
+
+###
+
+POST http://localhost:18000/ShoppingCart/123456/items
+Content-Type: application/json
+
+{
+    "productId": "1",
+    "productName": "Caffe Latte",
+    "price": 5,
+    "quantity": 1
+}
+
+###
+
+GET http://localhost:17000/get
+
+###
+
+POST https://localhost:17000/register
+Content-Type: application/json
+
+{
+    "username": "william",
+    "email": "william@gmail.com",
+    "displayName": "William Liebenberg",
+    "profileImageUrl": "https://images.com/william.jpg"
+}

@@ -1,3 +1,7 @@
+using System.Data.SqlTypes;
+using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
+
 using Dapr.Client;
 
 using DaprShop.Contracts;
@@ -14,7 +18,10 @@ public interface IShoppingCartService
 public class ShoppingCartService : IShoppingCartService
 {
     private readonly DaprClient _dapr;
-    private readonly string _storeName = "shoppingCartStore";
+
+    private readonly string _storeName = "cartsStore";
+    private readonly string _pubsubName = "ordersPubsub";
+    private readonly string _shoppingCartItemsTopic = "daprshop.shoppingcart.items";
 
     public ShoppingCartService(DaprClient dapr)
     {
@@ -27,7 +34,7 @@ public class ShoppingCartService : IShoppingCartService
         ShoppingCartItem? existingItem = shoppingCart.Items.Where(x => x.ProductId == item.ProductId).FirstOrDefault();
         if(existingItem != null)
         {
-            existingItem.Quantity += item.Quantity;
+            existingItem = existingItem with { Quantity = existingItem.Quantity + item.Quantity };
         }
         else
         {
@@ -35,18 +42,18 @@ public class ShoppingCartService : IShoppingCartService
         }
 
         // save/update the shopping cart
-        await _dapr.SaveStateAsync(_storeName, userId, shoppingCart);
+        await _dapr.SaveStateAsync(_storeName, userId, shoppingCart, new StateOptions(){
+            Concurrency = ConcurrencyMode.LastWrite
+        });
 
         // publish the event
-        var itemAddedToShoppingCartEvent = new ProductItemAddedToShoppingCartEvent()
+        var itemAddedToShoppingCartEvent = new DaprShop.Contracts.Events.ProductItemAddedToShoppingCart()
         {
             UserId = userId,
             ProductId = item.ProductId ?? string.Empty
         };
 
-        const string pubsubName = "pubsub";
-        const string topicNameOfShoppingCartItems = "daprshop.shoppingart.items";
-        await _dapr.PublishEventAsync(pubsubName, topicNameOfShoppingCartItems, itemAddedToShoppingCartEvent);
+        await _dapr.PublishEventAsync(_pubsubName, _shoppingCartItemsTopic, itemAddedToShoppingCartEvent);
     }
 
     public async Task<Domain.ShoppingCart> GetShoppingCart(string userId)
@@ -62,3 +69,5 @@ public class ShoppingCartService : IShoppingCartService
         return shoppingCart;
     }
 }
+
+
