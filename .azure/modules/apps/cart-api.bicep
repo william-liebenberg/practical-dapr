@@ -7,8 +7,8 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource usersApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
-  name: 'users-api'
+resource cartApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
+  name: 'cart-api'
   location: location
   identity: {
     type: 'UserAssigned'
@@ -22,8 +22,8 @@ resource usersApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
     template: {
       containers: [
         {
-          name: 'users-api'
-          image: 'acadaprshop.azurecr.io/daprshop-usermanagement-api'
+          name: 'cart-api'
+          image: 'acadaprshop.azurecr.io/daprshop-shoppingcart-api'
           env: [
             {
               name: 'ASPNETCORE_ENVIRONMENT'
@@ -59,7 +59,7 @@ resource usersApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
       activeRevisionsMode: 'single'
       dapr: {
         enabled: true
-        appId: 'users-api'
+        appId: 'cart-api'
         appPort: 80
       }
       ingress: {
