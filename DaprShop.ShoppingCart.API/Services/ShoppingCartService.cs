@@ -19,8 +19,8 @@ public class ShoppingCartService : IShoppingCartService
 {
     private readonly DaprClient _dapr;
 
-    private readonly string _storeName = "cartsStore";
-    private readonly string _pubsubName = "ordersPubsub";
+    private readonly string _storeName = "shopStore";
+    private readonly string _pubsubName = "daprshop-pubsub";
     private readonly string _shoppingCartItemsTopic = "daprshop.shoppingcart.items";
 
     public ShoppingCartService(DaprClient dapr)
@@ -58,6 +58,9 @@ public class ShoppingCartService : IShoppingCartService
 
     public async Task<Domain.ShoppingCart> GetShoppingCart(string userId)
     {
+        //var ss = await _dapr.GetStateEntryAsync<Domain.ShoppingCart>(_storeName, userId);
+        //await ss.SaveAsync();
+
         var shoppingCart = await _dapr.GetStateAsync<Domain.ShoppingCart>(_storeName, userId);
         if(shoppingCart == null)
         {

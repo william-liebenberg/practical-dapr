@@ -6,13 +6,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.ShoppingCart.API",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Contracts", "DaprShop.Contracts\DaprShop.Contracts.csproj", "{AC9F9A8B-C150-4353-A410-CA4EE786312B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DaprComponents", "DaprComponents", "{F8E749A9-7EFD-401E-85A7-D0D7E1FDC41B}"
-	ProjectSection(SolutionItems) = preProject
-		local-components\orders.pubsub.yaml = local-components\orders.pubsub.yaml
-		local-components\carts.store.yaml = local-components\carts.store.yaml
-		local-components\users.store.yaml = local-components\users.store.yaml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43EC5F4-345E-4772-9AE2-49F189A8D21A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig

@@ -7,7 +7,7 @@ public class UserService
 {
     private readonly ILogger<UserService> _logger;
     private readonly DaprClient _dapr;
-    private readonly string _storeName = "userStore";
+    private readonly string _storeName = "daprshop-statestore";
 
     public UserService(ILogger<UserService> logger, DaprClient dapr)
     {

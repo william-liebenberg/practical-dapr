@@ -1,14 +1,12 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: cartsStore
+  name: daprshop-pubsub
 spec:
-  type: state.redis
+  type: pubsub.redis
   version: v1
   metadata:
   - name: redisHost
-    value: "0.0.0.0:6379"
+    value: 0.0.0.0:6379
   - name: redisPassword
     value: ""
-  - name: actorStateStore
-    value: "true"
