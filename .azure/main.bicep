@@ -1,6 +1,11 @@
 param location string = resourceGroup().location
 param envName string = 'test'
 
+param registry string
+param registryUsername string
+@secure()
+param registryPassword string
+
 param uniqueSeed string = '${take(uniqueString(resourceGroup().id, deployment().name), 6)}-${envName}'
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +102,9 @@ module basketApi 'modules/apps/users-api.bicep' = {
   params: {
     location: location
     containerAppsEnvironmentId: containerAppsEnvironment.outputs.id
-    managedIdentityId: managedIdentity.outputs.identityObjectId
+    managedIdentityId: managedIdentity.outputs.identityId
+    registry: registry
+    registryUsername: registryUsername
+    registryPassword: registryPassword
   }
 }

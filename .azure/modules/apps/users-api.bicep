@@ -2,7 +2,12 @@ param location string
 param containerAppsEnvironmentId string
 param managedIdentityId string
 
-resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
+param registry string
+param registryUsername string
+@secure()
+param registryPassword string
+
+resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'users-api'
   location: location
   identity: {
@@ -11,13 +16,14 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       '${managedIdentityId}': {}
     }
   }
+
   properties: {
     managedEnvironmentId: containerAppsEnvironmentId
     template: {
       containers: [
         {
           name: 'users-api'
-          image: 'acadaprshop/daprshop.usermanagement.api:latest'
+          image: 'acadaprshop.azurecr.io/daprshop-usermanagement-api:latest'
           env: [
             {
               name: 'ASPNETCORE_ENVIRONMENT'
@@ -36,6 +42,20 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       }
     }
     configuration: {
+      secrets: [
+        {
+          name: 'containerregistrypasswordref'
+          value: registryPassword
+        }
+      ]
+      registries: [
+        {
+          // server is in the format of myregistry.azurecr.io
+          server: registry
+          username: registryUsername
+          passwordSecretRef: 'containerregistrypasswordref'
+        }
+      ]
       activeRevisionsMode: 'single'
       dapr: {
         enabled: true
