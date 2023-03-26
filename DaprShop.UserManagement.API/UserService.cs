@@ -30,7 +30,8 @@ public class UserService
         }
         catch (DaprException dx)
         {
-            return null;
+            _logger.LogError(dx, "Can't get state for user: {username}", username);
+            throw;
         }
     }
 
@@ -42,8 +43,16 @@ public class UserService
             throw new UserAlreadyExistsException(newUser.Username);
         }
 
-        // save the user to the store
-        await _dapr.SaveStateAsync(_storeName, newUser.Username, newUser);
+        try
+        {
+            // save the user to the store
+            await _dapr.SaveStateAsync(_storeName, newUser.Username, newUser);
+        }
+        catch (DaprException dx)
+        {
+            _logger.LogError(dx, "Can't save state for user: {username}", newUser.Username);
+            throw;
+        }
 
         return;
     }

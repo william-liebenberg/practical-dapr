@@ -1,10 +1,6 @@
-using System.Data.SqlTypes;
-using System.Runtime.Serialization;
-using System.Security.Cryptography.X509Certificates;
-
+using Dapr;
 using Dapr.Client;
 
-using DaprShop.Contracts;
 using DaprShop.ShoppingCart.API.Domain;
 
 namespace DaprShop.ShoppingCart.API.Services;
@@ -17,14 +13,16 @@ public interface IShoppingCartService
 
 public class ShoppingCartService : IShoppingCartService
 {
+    private readonly ILogger<ShoppingCartService> _logger;
     private readonly DaprClient _dapr;
 
     private readonly string _storeName = "shopStore";
     private readonly string _pubsubName = "daprshop-pubsub";
     private readonly string _shoppingCartItemsTopic = "daprshop.shoppingcart.items";
 
-    public ShoppingCartService(DaprClient dapr)
+    public ShoppingCartService(ILogger<ShoppingCartService> logger, DaprClient dapr)
     {
+        _logger = logger;
         _dapr = dapr;
     }
 
@@ -41,35 +39,57 @@ public class ShoppingCartService : IShoppingCartService
             shoppingCart.Items.Add(item);
         }
 
-        // save/update the shopping cart
-        await _dapr.SaveStateAsync(_storeName, userId, shoppingCart, new StateOptions(){
-            Concurrency = ConcurrencyMode.LastWrite
-        });
+        try
+        {
+            // save/update the shopping cart
+            await _dapr.SaveStateAsync(_storeName, userId, shoppingCart, new StateOptions()
+            {
+                Concurrency = ConcurrencyMode.LastWrite
+            });
+        }
+        catch (DaprException dx)
+        {
+            _logger.LogError(dx, "Couldn't save cart state for user: {userid}", userId);
+            throw;
+        }
 
-        // publish the event
         var itemAddedToShoppingCartEvent = new DaprShop.Contracts.Events.ProductItemAddedToShoppingCart()
         {
             UserId = userId,
             ProductId = item.ProductId ?? string.Empty
         };
 
-        await _dapr.PublishEventAsync(_pubsubName, _shoppingCartItemsTopic, itemAddedToShoppingCartEvent);
+        try
+        {
+            // publish the event
+            await _dapr.PublishEventAsync(_pubsubName, _shoppingCartItemsTopic, itemAddedToShoppingCartEvent);
+        }
+        catch (DaprException dx)
+        {
+            _logger.LogError(dx, "Couldn't publish event for product: {productId}", itemAddedToShoppingCartEvent.ProductId);
+            throw;
+        }
     }
 
     public async Task<Domain.ShoppingCart> GetShoppingCart(string userId)
     {
-        //var ss = await _dapr.GetStateEntryAsync<Domain.ShoppingCart>(_storeName, userId);
-        //await ss.SaveAsync();
-
-        var shoppingCart = await _dapr.GetStateAsync<Domain.ShoppingCart>(_storeName, userId);
-        if(shoppingCart == null)
+        try
         {
-            shoppingCart = new Domain.ShoppingCart()
+            var shoppingCart = await _dapr.GetStateAsync<Domain.ShoppingCart>(_storeName, userId);
+            if (shoppingCart == null)
             {
-                UserId = userId
-            };
+                shoppingCart = new Domain.ShoppingCart()
+                {
+                    UserId = userId
+                };
+            }
+            return shoppingCart;
         }
-        return shoppingCart;
+        catch (DaprException dx)
+        {
+            _logger.LogError(dx, "Could not get cart state for user: {userid}", userId);
+            throw;
+        }
     }
 }
 

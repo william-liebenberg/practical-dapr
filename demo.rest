@@ -14,6 +14,22 @@ Content-Type: application/json
 
 ###
 
+GET https://cart-api.politeflower-3c95dceb.australiaeast.azurecontainerapps.io/ShoppingCart/123456
+
+###
+
+POST https://cart-api.politeflower-3c95dceb.australiaeast.azurecontainerapps.io/ShoppingCart/123456/items
+Content-Type: application/json
+
+{
+    "productId": "1",
+    "productName": "Caffe Latte",
+    "price": 5,
+    "quantity": 1
+}
+
+###
+
 GET http://localhost:17000/get
 
 ###

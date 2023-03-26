@@ -93,8 +93,25 @@ module daprSecretStore 'modules/dapr/secret-store.bicep' = {
 // Container apps
 ////////////////////////////////////////////////////////////////////////////////
 
-module basketApi 'modules/apps/users-api.bicep' = {
+module usersApi 'modules/apps/users-api.bicep' = {
   name: '${deployment().name}-app-users-api'
+  dependsOn: [
+    daprPubSub
+    daprStateStore
+  ]
+  params: {
+    location: location
+    containerAppsEnvironmentId: containerAppsEnvironment.outputs.id
+    managedIdentityId: managedIdentity.outputs.identityId
+    registry: registry
+    registryUsername: registryUsername
+    registryPassword: registryPassword
+  }
+}
+
+
+module cartApi 'modules/apps/cart-api.bicep' = {
+  name: '${deployment().name}-app-cart-api'
   dependsOn: [
     daprPubSub
     daprStateStore
