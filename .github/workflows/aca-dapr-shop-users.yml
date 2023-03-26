@@ -72,7 +72,7 @@ jobs:
     - name: Deploy to containerapp
       uses: azure/CLI@v1
       with:
-        inlineScript: >
+        inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --image ${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
     
