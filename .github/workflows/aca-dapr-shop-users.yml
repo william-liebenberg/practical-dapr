@@ -20,8 +20,8 @@ on:
     - .github/workflows/aca-dapr-shop-users.yml
 
 env:
-  CONTAINER_APP_CONTAINER_NAME: daprshopusersapi
-  CONTAINER_APP_NAME: aca-dapr-shop-users
+  CONTAINER_APP_CONTAINER_NAME: users-api
+  CONTAINER_APP_NAME: users-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
   CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
   DOTNET_CORE_VERSION: 7.0.x
