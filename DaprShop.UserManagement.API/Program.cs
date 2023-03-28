@@ -30,6 +30,14 @@ app.MapGet("/get", async (string username, [FromServices]UserService userService
 .WithName("GetUser")
 .WithOpenApi();
 
+app.MapGet("/isRegistered", async (string username, [FromServices] UserService userService) =>
+{
+    User? user = await userService.GetUser(username);
+    return user == null ? Results.NotFound() : Results.Ok();
+})
+.WithName("IsRegistered")
+.WithOpenApi();
+
 app.MapPost("/register", async (RegisterUserRequest request, [FromServices] UserService userService) =>
 {
     var newUser = new User(request.Username, request.Email, request.DisplayName, request.ProfileImageUrl);

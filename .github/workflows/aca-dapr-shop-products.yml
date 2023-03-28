@@ -1,0 +1,77 @@
+name: Build and deploy Products API
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+    paths:
+    - DaprShop.Contracts/**
+    - DaprShop.Products.API/**
+    - .github/workflows/aca-dapr-shop-products.yml
+  
+  pull_request:
+    branches:
+    - main
+
+    paths:
+    - DaprShop.Contracts/**
+    - DaprShop.Products.API/**
+    - .github/workflows/aca-dapr-shop-products.yml
+
+env:
+  CONTAINER_APP_CONTAINER_NAME: products-api
+  CONTAINER_APP_NAME: products-api
+  CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
+  CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
+  
+  # the csproj name - dots are converted to dashes
+  PROJECT_NAME_FOR_DOCKER: daprshop-products-api
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout to the branch
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        include-prerelease: false
+        global-json-file: global.json
+
+    - name: Log in to container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.acadaprshop_USERNAME_54DD }}
+        password: ${{ secrets.acadaprshop_PASSWORD_54DD }}
+
+    - name: Build and push container image to registry
+      working-directory: ./DaprShop.Products.API
+      run: dotnet publish -c Release -r linux-x64 -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{ github.sha }} --no-self-contained -p:ContainerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        # client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        # tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Deploy to containerapp
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.acadaprshop_USERNAME_54DD }} --password '${{ secrets.acadaprshop_PASSWORD_54DD }}'
+          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+    
+    - name: logout
+      run: >
+        az logout

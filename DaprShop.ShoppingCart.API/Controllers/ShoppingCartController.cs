@@ -47,4 +47,18 @@ public class ShoppingCartController : ControllerBase
             return BadRequest(ex);
         }
     }
+
+    [HttpPost("{userId}/submit")]
+    public async Task<ActionResult<Domain.SubmittedOrder>> Submit(string userId)
+    {
+        try
+        {
+            var order = await _shoppingCartService.Submit(userId);
+            return Ok(order);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+    }
 }

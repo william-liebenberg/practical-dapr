@@ -43,3 +43,19 @@ Content-Type: application/json
     "displayName": "William Liebenberg",
     "profileImageUrl": "https://images.com/william.jpg"
 }
+
+###
+
+GET https://users-api.politeflower-3c95dceb.australiaeast.azurecontainerapps.io/get?username=sarah
+
+###
+
+POST https://users-api.politeflower-3c95dceb.australiaeast.azurecontainerapps.io/register
+Content-Type: application/json
+
+{
+    "username": "sarah",
+    "email": "sarah@gmail.com",
+    "displayName": "Sarah Liebenberg",
+    "profileImageUrl": "https://images.com/sarah.jpg"
+}

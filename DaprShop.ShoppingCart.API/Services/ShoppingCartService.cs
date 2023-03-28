@@ -18,7 +18,7 @@ public class ShoppingCartService : IShoppingCartService
 
     private readonly string _storeName = "daprshop-statestore";
     private readonly string _pubsubName = "daprshop-pubsub";
-    private readonly string _shoppingCartItemsTopic = "daprshop.shoppingcart.items";
+    private readonly string _ordersQueueTopic = "daprshop.orders";
 
     public ShoppingCartService(ILogger<ShoppingCartService> logger, DaprClient dapr)
     {
@@ -62,7 +62,7 @@ public class ShoppingCartService : IShoppingCartService
         try
         {
             // publish the event
-            await _dapr.PublishEventAsync(_pubsubName, _shoppingCartItemsTopic, itemAddedToShoppingCartEvent);
+            await _dapr.PublishEventAsync(_pubsubName, _ordersQueueTopic, itemAddedToShoppingCartEvent);
         }
         catch (DaprException dx)
         {
@@ -88,6 +88,42 @@ public class ShoppingCartService : IShoppingCartService
         catch (DaprException dx)
         {
             _logger.LogError(dx, "Could not get cart state for user: {userid}", userId);
+            throw;
+        }
+    }
+
+    // sumbit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
+    public async Task<Domain.Order> Submit(string userId)
+    {
+        var cart = await GetShoppingCart(userId);
+
+        // TODO: Refine Order creation - too much in here
+        var order = new Order
+            (
+            Guid.NewGuid().ToString(),
+            userId,
+            "my order",
+            cart.Items.Sum(i => i.Price),
+            cart.Items.Select(i => new OrderItem(1, new Product(i.ProductId, i.ProductName, "DESCRIPTION", i.Price, "IMAGEURL"))).ToArray(),
+            OrderStatus.OrderNew
+            );
+
+        await ClearShoppingCart(userId);
+
+        await _dapr.PublishEventAsync<Order>(_pubsubName, _ordersQueueTopic, order);
+
+        return order;
+    }
+
+    public async Task ClearShoppingCart(string userId)
+    {
+        try
+        {
+            await _dapr.DeleteStateAsync(_storeName, userId);
+        }
+        catch (DaprException dx)
+        {
+            _logger.LogError(dx, "Could clear the cart for user: {userid}", userId);
             throw;
         }
     }
