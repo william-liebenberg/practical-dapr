@@ -14,6 +14,18 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var MyAllowSpecificOrigins = "_MyAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                      });
+});
+
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -39,7 +51,9 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "users/swagger";
 });
 
+app.UseCors(MyAllowSpecificOrigins);
 app.UseForwardedHeaders();
+
 
 app.MapGet("users/get", async (string username, [FromServices]UserService userService) =>
 {

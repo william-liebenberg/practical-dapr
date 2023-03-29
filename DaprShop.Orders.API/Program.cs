@@ -22,6 +22,18 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddHostedService<LongRunningService>();
 builder.Services.AddSingleton<BackgroundWorkerQueue>();
 
+var MyAllowSpecificOrigins = "_MyAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                      });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -57,7 +69,9 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "orders/swagger";
 });
 
-app.UseForwardedHeaders(); app.UseHttpsRedirection();
+app.UseForwardedHeaders(); 
+app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapGet("/orders/get", async (string orderId, [FromServices] OrderService orderService) =>
 {
