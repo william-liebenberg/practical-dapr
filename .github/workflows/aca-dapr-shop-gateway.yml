@@ -20,8 +20,8 @@ on:
     - .github/workflows/aca-dapr-shop-gateway.yml
 
 env:
-  CONTAINER_APP_CONTAINER_NAME: cart-api
-  CONTAINER_APP_NAME: cart-api
+  CONTAINER_APP_CONTAINER_NAME: gateway-api
+  CONTAINER_APP_NAME: gateway-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
   CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
   

@@ -24,7 +24,6 @@ env:
   CONTAINER_APP_NAME: users-api
   CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
   CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
-  DOTNET_CORE_VERSION: 7.0.x
 
   # the csproj name - dots are converted to dashes
   PROJECT_NAME_FOR_DOCKER: daprshop-usermanagement-api
