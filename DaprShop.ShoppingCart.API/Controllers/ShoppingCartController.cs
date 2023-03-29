@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DaprShop.ShoppingCart.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("cart/[controller]")]
 public class ShoppingCartController : ControllerBase
 {
     private readonly IShoppingCartService _shoppingCartService;
@@ -14,7 +14,7 @@ public class ShoppingCartController : ControllerBase
         _shoppingCartService = shoppingCartService;
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("/get/{userId}")]
     public async Task<ActionResult<Domain.ShoppingCart>> Get(string userId)
     {
         try
@@ -28,7 +28,7 @@ public class ShoppingCartController : ControllerBase
         }
     }
 
-    [HttpPost("{userId}/items")]
+    [HttpPost("/items/{userId}")]
     public async Task<ActionResult<Domain.ShoppingCart>> Post(string userId, [FromBody]Contracts.Requests.AddProductItemToCart item)
     {
         Domain.ShoppingCartItem mappedItem = new(
@@ -48,17 +48,17 @@ public class ShoppingCartController : ControllerBase
         }
     }
 
-    [HttpPost("{userId}/submit")]
-    public async Task<ActionResult<Domain.SubmittedOrder>> Submit(string userId)
-    {
-        try
-        {
-            var order = await _shoppingCartService.Submit(userId);
-            return Ok(order);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex);
-        }
-    }
+    //[HttpPost("/submit/{userId}")]
+    //public async Task<ActionResult<Domain.SubmittedOrder>> Submit(string userId)
+    //{
+    //    try
+    //    {
+    //        var order = await _shoppingCartService.Submit(userId);
+    //        return Ok(order);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex);
+    //    }
+    //}
 }

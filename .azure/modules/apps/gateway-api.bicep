@@ -7,7 +7,7 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource cartApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
+resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'cart-api'
   location: location
   identity: {
@@ -22,8 +22,7 @@ resource cartApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
     template: {
       containers: [
         {
-          name: 'cart-api'
-          //image: 'acadaprshop.azurecr.io/daprshop-shoppingcart-api'
+          name: 'gateway-api'
           image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
           env: [
             {
@@ -60,7 +59,7 @@ resource cartApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
       activeRevisionsMode: 'single'
       dapr: {
         enabled: true
-        appId: 'cart-api'
+        appId: 'gateway-api'
         appPort: 80
       }
       ingress: {

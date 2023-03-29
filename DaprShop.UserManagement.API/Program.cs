@@ -1,6 +1,8 @@
 using DaprShop.UserManagement.API;
 
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +14,34 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwagger(c =>
+{
+    c.RouteTemplate = "users/swagger/{documentName}/swagger.json";
+    c.PreSerializeFilters.Add((swaggerDoc, httpRequest) =>
+    {
+        if (!httpRequest.Headers.ContainsKey("X-Forwarded-Host")) return;
+        var basePath = "";
+        var serverUrl = $"{httpRequest.Scheme}://{httpRequest.Headers["X-Forwarded-Host"]}/{basePath}";
+        swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = serverUrl } };
+    });
+});
+app.UseSwaggerUI(o =>
+{
+    o.SwaggerEndpoint("v1/swagger.json", "v1");
+    o.RoutePrefix = "users/swagger";
+});
 
-app.UseHttpsRedirection();
-// app.UseAuthorization();
-// app.MapControllers();
+app.UseForwardedHeaders();
 
-app.MapGet("/get", async (string username, [FromServices]UserService userService) =>
+app.MapGet("users/get", async (string username, [FromServices]UserService userService) =>
 {
     User? user = await userService.GetUser(username);
     return user == null ? Results.NotFound() : Results.Ok(user);
@@ -30,7 +49,7 @@ app.MapGet("/get", async (string username, [FromServices]UserService userService
 .WithName("GetUser")
 .WithOpenApi();
 
-app.MapGet("/isRegistered", async (string username, [FromServices] UserService userService) =>
+app.MapGet("users/isRegistered", async (string username, [FromServices] UserService userService) =>
 {
     User? user = await userService.GetUser(username);
     return user == null ? Results.NotFound() : Results.Ok();
@@ -38,7 +57,7 @@ app.MapGet("/isRegistered", async (string username, [FromServices] UserService u
 .WithName("IsRegistered")
 .WithOpenApi();
 
-app.MapPost("/register", async (RegisterUserRequest request, [FromServices] UserService userService) =>
+app.MapPost("users/register", async (RegisterUserRequest request, [FromServices] UserService userService) =>
 {
     var newUser = new User(request.Username, request.Email, request.DisplayName, request.ProfileImageUrl);
     try

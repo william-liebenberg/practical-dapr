@@ -158,3 +158,20 @@ module ordersApi 'modules/apps/orders-api.bicep' = {
     registryPassword: registryPassword
   }
 }
+
+
+module gatewayApi 'modules/apps/gateway-api.bicep' = {
+  name: '${deployment().name}-app-gateway-api'
+  dependsOn: [
+    daprPubSub
+    daprStateStore
+  ]
+  params: {
+    location: location
+    containerAppsEnvironmentId: containerAppsEnvironment.outputs.id
+    managedIdentityId: managedIdentity.outputs.identityId
+    registry: registry
+    registryUsername: registryUsername
+    registryPassword: registryPassword
+  }
+}

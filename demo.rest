@@ -59,3 +59,7 @@ Content-Type: application/json
     "displayName": "Sarah Liebenberg",
     "profileImageUrl": "https://images.com/sarah.jpg"
 }
+
+###
+
+curl -H 'dapr-app-id: checkout' 'http://localhost:3500/checkout/100'

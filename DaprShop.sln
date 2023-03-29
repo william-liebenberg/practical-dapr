@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.UserManagement.API", "DaprShop.UserManagement.API\DaprShop.UserManagement.API.csproj", "{FCAE531D-C4C2-4888-BDFD-A79E566BA22F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaprShop.Products.API", "DaprShop.Products.API\DaprShop.Products.API.csproj", "{C5771FC3-0ECC-45B1-A5A5-1B4F02B6C215}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Products.API", "DaprShop.Products.API\DaprShop.Products.API.csproj", "{C5771FC3-0ECC-45B1-A5A5-1B4F02B6C215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaprShop.Orders.API", "DaprShop.Orders.API\DaprShop.Orders.API.csproj", "{FC43BBF1-8D06-44B4-B4BD-89880DBB18AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Orders.API", "DaprShop.Orders.API\DaprShop.Orders.API.csproj", "{FC43BBF1-8D06-44B4-B4BD-89880DBB18AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Gateway.API", "DaprShop.Gateway.API\DaprShop.Gateway.API.csproj", "{0628D502-1110-487E-A512-2A36999C7D88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{FC43BBF1-8D06-44B4-B4BD-89880DBB18AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC43BBF1-8D06-44B4-B4BD-89880DBB18AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC43BBF1-8D06-44B4-B4BD-89880DBB18AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0628D502-1110-487E-A512-2A36999C7D88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0628D502-1110-487E-A512-2A36999C7D88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0628D502-1110-487E-A512-2A36999C7D88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0628D502-1110-487E-A512-2A36999C7D88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

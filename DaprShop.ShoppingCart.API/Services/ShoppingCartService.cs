@@ -104,7 +104,8 @@ public class ShoppingCartService : IShoppingCartService
             userId,
             "my order",
             cart.Items.Sum(i => i.Price),
-            cart.Items.Select(i => new OrderItem(1, new Product(i.ProductId, i.ProductName, "DESCRIPTION", i.Price, "IMAGEURL"))).ToArray(),
+            cart.Items.Where(i => i.ProductId != null && i.ProductName != null)
+                .Select(i => new OrderItem(1, new Product(i.ProductId!, i.ProductName!, "DESCRIPTION", i.Price, "IMAGEURL"))).ToArray(),
             OrderStatus.OrderNew
             );
 
