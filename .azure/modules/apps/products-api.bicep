@@ -23,7 +23,8 @@ resource productsApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
       containers: [
         {
           name: 'products-api'
-          image: 'acadaprshop.azurecr.io/daprshop-products-api'
+          //image: 'acadaprshop.azurecr.io/daprshop-products-api'
+          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
           env: [
             {
               name: 'ASPNETCORE_ENVIRONMENT'
@@ -66,6 +67,17 @@ resource productsApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
         external: true
         targetPort: 80
         allowInsecure: true
+        corsPolicy: {
+          allowedOrigins: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+          allowedMethods: [
+            '*'
+          ]
+        }
       }
     }
   }

@@ -33,6 +33,8 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
       scopes: [
         'users-api'
         'cart-api'
+        'products-api'
+        'orders-api'
       ]
     }
   }

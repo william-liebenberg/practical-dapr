@@ -8,7 +8,7 @@ param registryUsername string
 param registryPassword string
 
 resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
-  name: 'cart-api'
+  name: 'gateway-api'
   location: location
   identity: {
     type: 'UserAssigned'
@@ -66,6 +66,17 @@ resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
         external: true
         targetPort: 80
         allowInsecure: true
+        corsPolicy: {
+          allowedOrigins: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+          allowedMethods: [
+            '*'
+          ]
+        }
       }
     }
   }

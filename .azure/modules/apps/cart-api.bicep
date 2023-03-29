@@ -67,6 +67,17 @@ resource cartApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
         external: true
         targetPort: 80
         allowInsecure: true
+        corsPolicy: {
+          allowedOrigins: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+          allowedMethods: [
+            '*'
+          ]
+        }
       }
     }
   }
