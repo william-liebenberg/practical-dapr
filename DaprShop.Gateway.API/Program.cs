@@ -20,6 +20,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.MapReverseProxy();
+
 app.UseSwagger(options =>
 {
     options.RouteTemplate = "swagger/{documentName}/swagger.json";
@@ -54,9 +56,7 @@ app.MapGet("info", ([FromServices] IConfiguration config) =>
             .WithName("Info");
 
 
-app.UseRouting();
-app.UseCors();
-
-app.MapReverseProxy();
+//app.UseRouting();
+//app.UseCors();
 
 app.Run();
