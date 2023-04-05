@@ -7,7 +7,7 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource productsApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
+resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'products-api'
   location: location
   identity: {
@@ -66,19 +66,10 @@ resource productsApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: true
         targetPort: 80
-        allowInsecure: true
-        corsPolicy: {
-          allowedOrigins: [
-            '*'
-          ]
-          allowedHeaders: [
-            '*'
-          ]
-          allowedMethods: [
-            '*'
-          ]
-        }
+        allowInsecure: false
       }
     }
   }
 }
+
+output fqdn string = containerApp.properties.configuration.ingress.fqdn

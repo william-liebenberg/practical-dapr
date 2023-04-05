@@ -8,9 +8,9 @@ param registryPassword string
 
 param uniqueSeed string = '${take(uniqueString(resourceGroup().id, deployment().name), 6)}-${envName}'
 
-////////////////////////////////////////////////////////////////////////////////
-// Infrastructure
-////////////////////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------------------
+// Core Infrastructure
+// --------------------------------------------------------------------------
 
 module managedIdentity 'modules/infra/managed-identity.bicep' = {
   name: '${deployment().name}-infra-managed-identity'
@@ -51,14 +51,12 @@ module keyVault 'modules/infra/keyvault.bicep' = {
     uniqueSeed: uniqueSeed
     managedIdentityObjectId: managedIdentity.outputs.identityObjectId
     // catalogDbConnectionString: sqlServer.outputs.catalogDbConnectionString
-    // identityDbConnectionString: sqlServer.outputs.identityDbConnectionString
-    // orderingDbConnectionString: sqlServer.outputs.orderingDbConnectionString
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------------------
 // Dapr components
-////////////////////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------------------
 
 module daprPubSub 'modules/dapr/pubsub.bicep' = {
   name: '${deployment().name}-dapr-pubsub'
@@ -76,7 +74,6 @@ module daprStateStore 'modules/dapr/state-store.bicep' = {
     cosmosCollectionName: cosmos.outputs.cosmosCollectionName
     cosmosUrl: cosmos.outputs.cosmosUrl
     cosmosAccountName: cosmos.outputs.cosmosAccountName
-    //cosmosKey: cosmos.outputs.cosmosKey
   }
 }
 
@@ -89,9 +86,9 @@ module daprSecretStore 'modules/dapr/secret-store.bicep' = {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------------------
 // Container apps
-////////////////////////////////////////////////////////////////////////////////
+// --------------------------------------------------------------------------
 
 module usersApi 'modules/apps/users-api.bicep' = {
   name: '${deployment().name}-app-users-api'
@@ -170,8 +167,14 @@ module gatewayApi 'modules/apps/gateway-api.bicep' = {
     location: location
     containerAppsEnvironmentId: containerAppsEnvironment.outputs.id
     managedIdentityId: managedIdentity.outputs.identityId
+
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+
+    cartApiFqdn: cartApi.outputs.fqdn
+    productsApiFqdn: productsApi.outputs.fqdn
+    ordersApiFqdn: ordersApi.outputs.fqdn
+    usersApiFqdn: usersApi.outputs.fqdn
   }
 }

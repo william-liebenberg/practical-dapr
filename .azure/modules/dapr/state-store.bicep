@@ -5,9 +5,6 @@ param cosmosDbName string
 param cosmosCollectionName string
 param cosmosUrl string
 
-// @secure()
-// param cosmosKey string
-
 resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' existing = {
   name: cosmosAccountName
 }

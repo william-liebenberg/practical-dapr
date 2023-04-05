@@ -7,7 +7,12 @@ param registryUsername string
 @secure()
 param registryPassword string
 
-resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
+param cartApiFqdn string
+param productsApiFqdn string
+param ordersApiFqdn string
+param usersApiFqdn string
+
+resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'gateway-api'
   location: location
   identity: {
@@ -32,6 +37,22 @@ resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'ASPNETCORE_URLS'
               value: 'http://0.0.0.0:80'
+            }
+            {
+              name: 'ApiRoutes__0__HostUrl'
+              value: cartApiFqdn
+            }
+            {
+              name: 'ApiRoutes__1__HostUrl'
+              value: productsApiFqdn
+            }
+            {
+              name: 'ApiRoutes__2__HostUrl'
+              value: ordersApiFqdn
+            }
+            {
+              name: 'ApiRoutes__3__HostUrl'
+              value: usersApiFqdn
             }
           ]
         }
@@ -65,19 +86,10 @@ resource gatewayApiContainerApp 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: true
         targetPort: 80
-        allowInsecure: true
-        corsPolicy: {
-          allowedOrigins: [
-            '*'
-          ]
-          allowedHeaders: [
-            '*'
-          ]
-          allowedMethods: [
-            '*'
-          ]
-        }
+        allowInsecure: false
       }
     }
   }
 }
+
+output fqdn string = containerApp.properties.configuration.ingress.fqdn
