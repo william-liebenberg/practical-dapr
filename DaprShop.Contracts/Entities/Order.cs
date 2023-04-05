@@ -1,4 +1,4 @@
-﻿namespace DaprShop.Orders.API;
+﻿namespace DaprShop.Contracts.Entities;
 
 public enum OrderStatus
 {
@@ -7,9 +7,6 @@ public enum OrderStatus
     OrderProcessing,
     OrderComplete
 }
-
-// TODO: SHould this be in Contracts?
-public record Product(string ProductId, string Name, string Description, decimal Cost, string ImageUrl);
 
 // LineItem is a simple line on an order, a tuple of count and a Product struct
 public record OrderItem(int Quantity, Product Product);
