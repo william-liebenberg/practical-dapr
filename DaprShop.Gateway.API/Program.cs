@@ -35,6 +35,7 @@ app.UseSwaggerUI(setup =>
         foreach (ApiRouteConfig route in apiRoutes)
         {
             var swaggerJsonEndpoint = $"{route.RoutePrefix}/{route.SwaggerJsonUrl}";
+            Console.WriteLine($"Adding Swagger Endpoint: {swaggerJsonEndpoint}");
             setup.SwaggerEndpoint(swaggerJsonEndpoint, route.RouteName);
         }
     }

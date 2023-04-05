@@ -14,6 +14,8 @@ public static class ApiGatewayConfiguration
 
         routes?.ToList().ForEach(r =>
         {
+            Console.WriteLine($"Adding Api Route: {r.RouteName} -> {r.ClusterName} -> {r.RoutePrefix} -> {r.HostUrl}");
+
             apiRoutes.Add(new RouteConfig()
             {
                 RouteId = r.RouteName,
@@ -21,14 +23,6 @@ public static class ApiGatewayConfiguration
                 Match = new RouteMatch()
                 {
                     Path = $"/{r.RoutePrefix}/{{*any}}"
-                },
-                Transforms = new List<Dictionary<string, string>>
-                {
-                    new()
-                    {
-                        { "ResponseHeader", "Access-Control-Allow-Origin" },
-                        { "Set", "https://localhost:7192" },
-                    }
                 }
             });
             apiClusters.Add(new ClusterConfig()
