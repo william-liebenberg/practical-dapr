@@ -1,6 +1,8 @@
 ﻿using Dapr;
 using Dapr.Client;
 
+using DaprShop.Contracts.Entities;
+
 namespace DaprShop.Products.API;
 
 public class ProductService

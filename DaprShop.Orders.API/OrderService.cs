@@ -1,6 +1,8 @@
 ﻿using Dapr;
 using Dapr.Client;
 
+using DaprShop.Contracts.Entities;
+
 namespace DaprShop.Orders.API;
 
 public class OrderService
