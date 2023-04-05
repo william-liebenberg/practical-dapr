@@ -1,41 +1,47 @@
+using Yarp.ReverseProxy.Transforms;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services
+    .AddReverseProxy()
+    .AddApiGatewayConfiguration(builder.Configuration)
+    .AddTransforms(builderContext =>
+    {
+        builderContext.CopyRequestHeaders = true;
+        builderContext.AddOriginalHost(useOriginal: true);
+        builderContext.UseDefaultForwarders = true;
+    })    
+    .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
-builder.Services.AddReverseProxy()
-.LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
-var MyAllowSpecificOrigins = "_MyAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      builder =>
-                      {
-                          builder.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                      });
-});
-
-//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwagger(options =>
+{
+    options.RouteTemplate = "swagger/{documentName}/swagger.json";
+});
 
-// Enable endpoint routing, required for the reverse proxy
+app.UseSwaggerUI(setup =>
+{
+    setup.RoutePrefix = string.Empty;
+    setup.SwaggerEndpoint("swagger/v1/swagger.json", "Api Gateway");
+    
+    IConfigurationSection apiRoutesSection = builder.Configuration.GetSection("ApiRoutes");
+    ApiRouteConfig[]? apiRoutes = apiRoutesSection.Get<ApiRouteConfig[]>();
+    if(apiRoutes != null)
+    {
+        foreach (ApiRouteConfig route in apiRoutes)
+        {
+            var swaggerJsonEndpoint = $"{route.RoutePrefix}/{route.SwaggerJsonUrl}";
+            setup.SwaggerEndpoint(swaggerJsonEndpoint, route.RouteName);
+        }
+    }
+});
+
 app.UseRouting();
-
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
+app.UseCors();
 app.MapReverseProxy();
-
-//app.MapControllers();
 
 app.Run();
