@@ -6,14 +6,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddReverseProxy()
-    .AddApiGatewayConfiguration(builder.Configuration)
     .AddTransforms(builderContext =>
     {
         builderContext.CopyRequestHeaders = true;
         builderContext.AddOriginalHost(useOriginal: true);
         builderContext.UseDefaultForwarders = true;
-    });    
-    //.LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
+    })
+    //.AddApiGatewayConfiguration(builder.Configuration);    
+    .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -56,6 +56,7 @@ app.MapGet("info", ([FromServices] IConfiguration config) =>
 
 app.UseRouting();
 app.UseCors();
+
 app.MapReverseProxy();
 
 app.Run();
