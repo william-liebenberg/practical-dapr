@@ -12,8 +12,8 @@ builder.Services
         builderContext.CopyRequestHeaders = true;
         builderContext.AddOriginalHost(useOriginal: true);
         builderContext.UseDefaultForwarders = true;
-    })    
-    .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
+    });    
+    //.LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
