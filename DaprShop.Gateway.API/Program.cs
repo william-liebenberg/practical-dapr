@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +42,17 @@ app.UseSwaggerUI(setup =>
         }
     }
 });
+
+
+app.MapGet("info", ([FromServices] IConfiguration config) =>
+{
+    IConfigurationSection apiRoutesSection = config.GetSection("ApiRoutes");
+    ApiRouteConfig[]? routes = apiRoutesSection.Get<ApiRouteConfig[]>();
+    return Task.FromResult(Results.Ok(routes));
+})
+            .WithOpenApi()
+            .WithName("Info");
+
 
 app.UseRouting();
 app.UseCors();
