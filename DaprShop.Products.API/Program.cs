@@ -21,7 +21,6 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "products/swagger";
 });
 
-app.UseHttpsRedirection();
 app.MapProductEndpoints();
  
 app.Run();

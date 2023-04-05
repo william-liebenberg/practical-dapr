@@ -24,7 +24,6 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "orders/swagger";
 });
 
-app.UseHttpsRedirection();
 app.MapOrderEndpoints();
 
 app.Run();

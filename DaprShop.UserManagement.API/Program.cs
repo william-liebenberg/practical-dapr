@@ -21,7 +21,6 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "users/swagger";
 });
 
-app.UseHttpsRedirection();
 app.MapUserManagementEndpoints();
 
 app.Run();

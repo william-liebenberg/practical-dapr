@@ -35,24 +35,20 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
               value: 'Production'
             }
             {
-              name: 'ASPNETCORE_URLS'
-              value: 'http://0.0.0.0:80'
-            }
-            {
               name: 'ApiRoutes__0__HostUrl'
-              value: cartApiFqdn
+              value: 'http://${cartApiFqdn}'
             }
             {
               name: 'ApiRoutes__1__HostUrl'
-              value: productsApiFqdn
+              value: 'http://${productsApiFqdn}'
             }
             {
               name: 'ApiRoutes__2__HostUrl'
-              value: ordersApiFqdn
+              value: 'http://${ordersApiFqdn}'
             }
             {
               name: 'ApiRoutes__3__HostUrl'
-              value: usersApiFqdn
+              value: 'http://${usersApiFqdn}'
             }
           ]
         }

@@ -30,10 +30,6 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
             }
-            {
-              name: 'ASPNETCORE_URLS'
-              value: 'http://0.0.0.0:80'
-            }
           ]
         }
       ]
@@ -66,7 +62,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: true
         targetPort: 80
-        allowInsecure: false
+        allowInsecure: true
       }
     }
   }

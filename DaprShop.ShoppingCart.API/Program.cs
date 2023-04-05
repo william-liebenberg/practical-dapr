@@ -21,7 +21,6 @@ app.UseSwaggerUI(o =>
     o.RoutePrefix = "cart/swagger";
 });
 
-app.UseHttpsRedirection();
 app.MapShoppingCartRoutes();
 
 app.Run();
