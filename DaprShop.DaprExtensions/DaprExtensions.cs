@@ -1,7 +1,7 @@
 ﻿using Dapr;
 using Dapr.Client;
 
-namespace DaprShop.Shopping.API.Services;
+namespace DaprShop.DaprExtensions;
 
 public static class DaprExtensions
 {
@@ -12,14 +12,12 @@ public static class DaprExtensions
             TResponse resp = await dapr.InvokeMethodAsync<TResponse>(request, cancellationToken);
             return resp;
         }
-        catch (DaprException dx) 
+        catch (DaprException dx)
         {
-            
+
             Console.WriteLine(dx.Message);
         }
 
         return default;
     }
 }
-
-

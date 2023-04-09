@@ -97,8 +97,8 @@ public class ProductService
             var p1 = new Product("1", "", "", 10, "");
             var p2 = new Product("2", "", "", 10, "");
 
-            await _dapr.SaveStateAsync(_storeName, "product_1", p1);
-            await _dapr.SaveStateAsync(_storeName, "product_2", p2);
+            await _dapr.SaveStateAsync(_storeName, p1.ProductId, p1);
+            await _dapr.SaveStateAsync(_storeName, p2.ProductId, p2);
         }
         catch (DaprException dx)
         {

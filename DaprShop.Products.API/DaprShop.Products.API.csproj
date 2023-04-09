@@ -11,11 +11,12 @@
     <PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
     <PackageReference Include="Dapr.Client" Version="1.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
+    <ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj" />
   </ItemGroup>
 
 </Project>

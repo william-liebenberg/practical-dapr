@@ -17,12 +17,12 @@ public static class OrderEndpoints
             .WithOpenApi()
             .WithName("GetOrder");
 
-        orders.MapGet("customer", async (string customerId, [FromServices] OrderService orderService) =>
+        orders.MapGet("user", async (string username, [FromServices] OrderService orderService) =>
         {
-            var result = await orderService.GetOrdersForCustomer(customerId);
+            var result = await orderService.GetOrdersForUser(username);
             return Results.Ok(result);
         })
-            .WithName("GetOrdersForCustomer")
+            .WithName("GetOrdersForUser")
             .WithOpenApi();
 
         orders.MapPost("sumbit", async ([FromBody] Order order, [FromServices] OrderService orderService) =>
@@ -32,6 +32,6 @@ public static class OrderEndpoints
         })
             .WithName("ReceiveOrder")
             .WithOpenApi()
-            .WithTopic("daprshop-pubsub", "daprshop.orders");
+            .WithTopic("daprshop-pubsub", "daprshop.orders.queue");
     }
 }

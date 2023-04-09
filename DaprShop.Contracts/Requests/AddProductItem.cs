@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace DaprShop.Contracts.Requests;
 
-public record AddProductItemToCart(string UserId, string ProductId, string ProductName, decimal Price, int Quantity);
+public record AddProductItemToCart(string Username, string ProductId, string ProductName, decimal Price, int Quantity);
 public record RemoveProductItemFromCart(string ProductId, int Quantity);

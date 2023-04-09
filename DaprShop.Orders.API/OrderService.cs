@@ -2,6 +2,7 @@
 using Dapr.Client;
 
 using DaprShop.Contracts.Entities;
+using DaprShop.Contracts.Events;
 
 namespace DaprShop.Orders.API;
 
@@ -11,6 +12,8 @@ public class OrderService
     private readonly DaprClient _dapr;
     private readonly BackgroundWorkerQueue _backgroundWorkerQueue;
     private readonly string _storeName = "daprshop-statestore";
+    private readonly string _pubsubName = "daprshop-pubsub";
+    private readonly string _orderStatusTopic = "daprshop.orders.status";
 
     public OrderService(
         ILogger<OrderService> logger,
@@ -67,39 +70,39 @@ public class OrderService
         try
         {
             // get all the orders for an existing user
-            List<Order> ordersForCustomer = (await _dapr.GetStateAsync<Order[]>(_storeName, newOrder.CustomerId))?.ToList() ?? new List<Order>();
+            List<Order> ordersForUser = (await _dapr.GetStateAsync<Order[]>(_storeName, newOrder.Username))?.ToList() ?? new List<Order>();
 
             // check for duplicates
-            var duplicateOrder = ordersForCustomer.FirstOrDefault(o => o.OrderId == newOrder.OrderId);
+            var duplicateOrder = ordersForUser.FirstOrDefault(o => o.OrderId == newOrder.OrderId);
             if (duplicateOrder is not null)
             {
-                _logger.LogWarning("Order {orderId} already exists for Customer {customerId}", duplicateOrder.OrderId, newOrder.CustomerId);
+                _logger.LogWarning("Order {orderId} already exists for User {username}", duplicateOrder.OrderId, newOrder.Username);
             }
             else
             {
                 // update the list of orders for the user
-                ordersForCustomer.Add(newOrder);
+                ordersForUser.Add(newOrder);
             }
 
             // save the user orders
-            await _dapr.SaveStateAsync(_storeName, newOrder.CustomerId, ordersForCustomer);
+            await _dapr.SaveStateAsync(_storeName, newOrder.Username, ordersForUser);
         }
         catch (DaprException dx)
         {
-            _logger.LogError(dx, "Could not update orders for customer: {customerId}", newOrder.CustomerId);
+            _logger.LogError(dx, "Could not update orders for user: {username}", newOrder.Username);
             throw;
         }
     }
 
-    public async Task<IEnumerable<Order>> GetOrdersForCustomer(string customerId)
+    public async Task<IEnumerable<Order>> GetOrdersForUser(string username)
     {
         try
         {
-            return await _dapr.GetStateAsync<Order[]>(_storeName, customerId);
+            return await _dapr.GetStateAsync<Order[]>(_storeName, username);
         }
         catch (DaprException dx)
         {
-            _logger.LogError(dx, "Could not get orders for customer: {customerId}", customerId);
+            _logger.LogError(dx, "Could not get orders for user: {username}", username);
             throw;
         }
     }
@@ -113,6 +116,15 @@ public class OrderService
         try
         {
             await _dapr.SaveStateAsync(_storeName, updatedOrder.OrderId, updatedOrder);
+
+            OrderStatusChanged statusChangedEvent = new()
+            {
+                OrderId = updatedOrder.OrderId,
+                CurrentStatus = updatedOrder.Status,
+                PreviousStatus = order.Status
+            };
+
+            await _dapr.PublishEventAsync(_pubsubName, _orderStatusTopic, statusChangedEvent);
         }
         catch (DaprException dx)
         {
@@ -163,7 +175,7 @@ public class OrderService
         });
 
         // publish the OrderComplete event
-        // then, delivery/notification service can pick it up and take it to customer
+        // then, delivery/notification service can pick it up and take it to user
     }
 
     //public async Task EmailNotify(Order order) { }
