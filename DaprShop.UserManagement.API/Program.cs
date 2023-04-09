@@ -10,6 +10,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseCloudEvents();
+app.MapSubscribeHandler();
+
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "users/swagger/{documentName}/swagger.json";

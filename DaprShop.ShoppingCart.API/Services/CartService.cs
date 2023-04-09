@@ -14,7 +14,7 @@ public class CartService
 
     private readonly string _storeName = "daprshop-statestore";
     private readonly string _pubsubName = "daprshop-pubsub";
-    private readonly string _cartTopic = "daprshop.cart.items"; 
+    private readonly string _cartTopic = "daprshop.cart.items";
     private readonly string _ordersQueueTopic = "daprshop.orders.queue";
 
     public CartService(ILogger<CartService> logger, DaprClient dapr)
@@ -134,11 +134,14 @@ public class CartService
     }
 
     // sumbit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
-    public async Task<Order> Submit(string username)
+    public async Task<Order?> Submit(string username)
     {
-        var cart = await GetCart(username);
+        Cart? cart = await GetCart(username);
+        if(cart is null || cart.IsEmpty())
+        {
+            return null;
+        }
 
-        // TODO: Refine Order creation - too much in here
         var order = new Order
             (
                 Status:         OrderStatus.OrderNew,

@@ -37,12 +37,12 @@ public static class ShoppingCartEndpoints
             }
         }).WithOpenApi().WithName("AddItem"); ;
 
-        cartRoutes.MapPost("submit", async ([FromBody] string username, [FromServices] CartService cartService) =>
+        cartRoutes.MapPost("submit", async ([FromBody] SubmitCartRequest req, [FromServices] CartService cartService) =>
         {
             try
             {
-                var order = await cartService.Submit(username);
-                return Results.Ok(order);
+                Order? order = await cartService.Submit(req.Username);
+                return order is null ? Results.BadRequest() : Results.Ok(order);
             }
             catch (Exception ex)
             {
@@ -52,45 +52,46 @@ public static class ShoppingCartEndpoints
 
 
 
-
+        string pubsubName = "daprshop-pubsub";
+        string cartTopic = "daprshop.cart.items";
 
         cartRoutes.MapPost("added", ([FromBody] ProductItemAddedToCart @event) =>
         {
             Console.WriteLine($"---===> Item [{@event.ProductId}] added to [{@event.Username}]'s cart.");
             return Results.Ok();
         })
+         .WithTopic(pubsubName, cartTopic)
          .WithName("ItemAdded")
-         .WithOpenApi()
-         .WithTopic("daprshop-pubsub", "daprshop.cart.items");
+         .WithOpenApi();
 
         cartRoutes.MapPost("removed", ([FromBody] ProductItemRemovedFromCart @event) =>
         {
             Console.WriteLine($"---===> Item [{@event.ProductId}] removed from [{@event.Username}]'s cart.");
             return Results.Ok();
         })
+            .WithTopic(pubsubName, cartTopic)
             .WithName("ItemRemoved")
-            .WithOpenApi()
-            .WithTopic("daprshop-pubsub", "daprshop.cart.items");
+            .WithOpenApi();
 
         cartRoutes.MapPost("cleared", ([FromBody] CartCleared @event) =>
         {
             Console.WriteLine($"---===> Cleared cart for [{@event.Username}]");
             return Results.Ok();
         })
+            .WithTopic(pubsubName, cartTopic)
             .WithName("Cleared")
-            .WithOpenApi()
-            .WithTopic("daprshop-pubsub", "daprshop.cart.items");
+            .WithOpenApi();
 
         cartRoutes.MapPost("StatusChanged", ([FromBody] OrderStatusChanged @event) =>
         {
             Console.WriteLine($"---===> Order [{@event.OrderId}] statuc changed from [{@event.PreviousStatus}] to [{@event.CurrentStatus}]");
             return Results.Ok();
         })
+            .WithTopic(pubsubName, cartTopic)
             .WithName("StatusChanged")
-            .WithOpenApi()
-            .WithTopic("daprshop-pubsub", "daprshop.orders.status");
-
+            .WithOpenApi();
         
         return builder;
     }
 }
+

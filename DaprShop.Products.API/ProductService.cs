@@ -94,11 +94,15 @@ public class ProductService
     {
         try
         {
-            var p1 = new Product("1", "", "", 10, "");
-            var p2 = new Product("2", "", "", 10, "");
+            var p1 = new Product("1", "Bread", "Fluffy freshly baked bread", 5, "");
+            var p2 = new Product("2", "Cheese", "Kraft Tastey Cheese block", 10, "");
+            var p3 = new Product("3", "Soy Milk", "Soy milk", 5, "");
+            var p4 = new Product("4", "Coffee", "Nescafe Freeze dried coffee", 5, "");
 
             await _dapr.SaveStateAsync(_storeName, p1.ProductId, p1);
             await _dapr.SaveStateAsync(_storeName, p2.ProductId, p2);
+            await _dapr.SaveStateAsync(_storeName, p3.ProductId, p3);
+            await _dapr.SaveStateAsync(_storeName, p4.ProductId, p4);
         }
         catch (DaprException dx)
         {
