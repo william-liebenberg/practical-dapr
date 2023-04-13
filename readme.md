@@ -101,6 +101,67 @@ https://markheath.net/post/running-locally-with-dapr-options
 https://code.benco.io/dapr-store/
 
 
+
+
+https://azure.github.io/aca-dotnet-workshop/aca/07-aca-cron-bindings/
+
+https://b-nova.com/en/home/content/how-microservice-developers-can-finally-concentrate-on-their-application-thanks-to-dapr
+
+
+https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/src/Microservices/Services.Product/ClassifiedAds.Services.Product.Api/HostedServices/PublishEventService.cs
+
+YARP Config for microservices:
+https://blog.antosubash.com/posts/netcore-microservice-with-abp-yarp-and-tye-part-7
+
+
+```ps1
+# Get Revision FQDN
+az containerapp revision list -g aca-dapr-shop -n gateway-api --query "[].properties.fqdn" -o tsv
+```
+
+
+
+https://github.com/Azure-Samples/dotNET-FrontEnd-to-BackEnd-with-DAPR-on-Azure-Container-Apps/tree/main
+
+
+https://docs.apimatic.io/manage-apis/api-merging/
+
+
+## API Documentation
+
+### Swashbuckle ASP.NET Core CLI
+
+https://github.com/domaindrivendev/Swashbuckle.AspNetCore#using-the-tool-with-the-net-core-30-sdk-or-later
+
+From project root:
+
+```ps1
+# Create a tool manifest
+dotnet new tool-manifest
+
+# Install the Tool
+dotnet tool install --version 6.5.0 Swashbuckle.AspNetCore.Cli
+```
+
+To generate a swagger specification file, run the cli tool in your project folder:
+
+```ps1
+dotnet swagger tofile --output [output] [startupassembly] [swaggerdoc]
+```
+
+To automate the swagger file generation, modify your .csproj to always render out the `swagger.json` file after successful builds:
+
+```xml
+<Project ...>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="dotnet tool restore" />
+		<Exec Command="dotnet swagger tofile --output ../docs/SwaggerFiles/my-swagger.json $(OutputPath)\$(AssemblyName).dll MyApiSpecDoc" />
+	</Target>
+
+</Project>
+```
+
 ## Services
 
 ### Cart Service
@@ -119,7 +180,7 @@ https://code.benco.io/dapr-store/
 - Pub/Sub
   - The cart pushes Order entities to the orders-queue topic to be collected by the orders service
 - State
-  - Stores and retrieves Cart entities from the state service, keyed on username.
+  - Stores and retrieves Cart entities from the state service, keyed on userId.
 - Service Invocation
   - Cross service call to products API to lookup and check products in the cart
 
@@ -141,7 +202,7 @@ Orders are initially set to `OrderReceived` status, then after 30 seconds moved 
 - Pub/Sub
   - Subscribes to the `orders-queue` topic to receive new orders from the cart service
 - State
-  - Stores and retrieves `Order` entities from the state service, keyed on `OrderID`. Also lists of orders per user, held as an array of OrderIDs and keyed on username
+  - Stores and retrieves `Order` entities from the state service, keyed on `OrderID`. Also lists of orders per user, held as an array of OrderIDs and keyed on userId
 - Bindings
   - All output bindings are optional, the service operates without these present
 - Azure Blob
@@ -164,4 +225,4 @@ The service is notable as it consists of a mix of both secured API routes, and t
 #### Dapr Integration
 
 - State
-  - Stores and retrieves User entities from the state service, keyed on username.
+  - Stores and retrieves User entities from the state service, keyed on userId.

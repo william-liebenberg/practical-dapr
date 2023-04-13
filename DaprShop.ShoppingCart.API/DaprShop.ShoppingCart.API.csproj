@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>e93b06f5-ddb7-4263-9ff6-fb30c1281d87</UserSecretsId>
     <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+    <ExportApiDocumentationOnBuild>true</ExportApiDocumentationOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,5 +20,4 @@
     <ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
     <ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj" />
   </ItemGroup>
-
 </Project>

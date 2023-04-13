@@ -1,0 +1,18 @@
+<Project>
+    <PropertyGroup>
+        <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ApiDocumentationDirectory>docs/openapi/</ApiDocumentationDirectory>
+        <ApiDocumentationVersion>v1</ApiDocumentationVersion>
+    </PropertyGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ExportApiDocumentationOnBuild)' == 'true'">
+        <Exec Command="dotnet tool restore" />
+        <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)"/>
+        <Exec Command="dotnet swagger tofile --output $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(ProjectName)-openapi.json $(OutputPath)\$(AssemblyName).dll $(ApiDocumentationVersion)" />
+        <Exec Command="dotnet swagger tofile --yaml --output $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(ProjectName)-openapi.yaml $(OutputPath)\$(AssemblyName).dll $(ApiDocumentationVersion)" />
+    </Target>
+
+</Project>
