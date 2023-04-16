@@ -1,0 +1,24 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DaprShop Gateway API",
+    "description": "All shop services",
+    "version": "v1"
+  },
+  "paths": {
+    "/info": {
+      "get": {
+        "tags": [
+          "Gateway"
+        ],
+        "operationId": "Info",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}

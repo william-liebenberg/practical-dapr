@@ -7,7 +7,10 @@ public static class OrderEndpoints
 {
     public static void MapOrderEndpoints(this IEndpointRouteBuilder builder)
     {
-        RouteGroupBuilder orders = builder.MapGroup("orders");
+        RouteGroupBuilder orders = builder
+            .MapGroup("orders")
+            .WithTags(new []{"Orders"})
+            .WithOpenApi();
 
         orders.MapGet("get", async (string orderId, [FromServices] OrderService orderService) =>
         {
@@ -21,17 +24,17 @@ public static class OrderEndpoints
         {
             var result = await orderService.GetOrdersForUser(username);
             return Results.Ok(result);
-        })
-            .WithName("GetOrdersForUser")
-            .WithOpenApi();
+        })            
+            .WithOpenApi()
+            .WithName("GetOrdersForUser");
 
-        orders.MapPost("sumbit", async ([FromBody] Order order, [FromServices] OrderService orderService) =>
+        orders.MapPost("submit", async ([FromBody] Order order, [FromServices] OrderService orderService) =>
         {
             await orderService.ProcessOrder(order);
             return Results.Ok();
         })
-            .WithName("ReceiveOrder")
+            .WithTopic("daprshop-pubsub", "daprshop.orders.queue")
             .WithOpenApi()
-            .WithTopic("daprshop-pubsub", "daprshop.orders.queue");
+            .WithName("ReceiveOrder");
     }
 }

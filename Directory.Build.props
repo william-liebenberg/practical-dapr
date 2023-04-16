@@ -12,7 +12,6 @@
         <Exec Command="dotnet tool restore" />
         <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)"/>
         <Exec Command="dotnet swagger tofile --output $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(ProjectName)-openapi.json $(OutputPath)\$(AssemblyName).dll $(ApiDocumentationVersion)" />
-        <Exec Command="dotnet swagger tofile --yaml --output $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(ProjectName)-openapi.yaml $(OutputPath)\$(AssemblyName).dll $(ApiDocumentationVersion)" />
     </Target>
 
 </Project>

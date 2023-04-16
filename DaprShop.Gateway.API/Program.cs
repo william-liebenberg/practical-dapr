@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,15 @@ builder.Services
     .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => 
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "DaprShop Gateway API",
+        Description = "All shop services"
+    });
+});
 
 var app = builder.Build();
 
@@ -21,7 +30,7 @@ app.UseSwagger(options =>
 app.UseSwaggerUI(setup =>
 {
     setup.RoutePrefix = string.Empty;
-    setup.SwaggerEndpoint("swagger/v1/swagger.json", "Api Gateway");    
+    setup.SwaggerEndpoint("swagger/v1/daprshop.json", "DaprShop API Gateway");
     setup.ConfigObject.DisplayRequestDuration = true;
 
     // both flags work to enable the `url.primaryName` query parameter to be respected
@@ -42,6 +51,8 @@ app.UseSwaggerUI(setup =>
     }
 });
 
+app.UseStaticFiles();
+
 app.MapGet("info", ([FromServices] IConfiguration config) =>
 {
     IConfigurationSection apiRoutesSection = config.GetSection("ApiRoutes");
@@ -49,6 +60,7 @@ app.MapGet("info", ([FromServices] IConfiguration config) =>
     return Task.FromResult(Results.Ok(routes));
 })
     .WithOpenApi()
+    .WithTags(new []{"Gateway"})
     .WithName("Info");
 
 app.Run();

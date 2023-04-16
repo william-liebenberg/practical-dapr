@@ -85,7 +85,7 @@ public class CartService
                 Username = username,
                 ProductId = productId
             };
-
+			
             await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemAddedToCartEvent);
         }
         catch (DaprException dx)
@@ -152,11 +152,11 @@ public class CartService
                 Items:          cart.Items.Select(i => new OrderItem(1, i.ProductId))
                                           .ToArray()
             );
+   
+		// put the new order into the queue
+        await _dapr.PublishEventAsync(_pubsubName, _ordersQueueTopic, order);
 
         await ClearCart(username);
-
-        // put the new order into the queue
-        await _dapr.PublishEventAsync(_pubsubName, _ordersQueueTopic, order);
 
         return order;
     }

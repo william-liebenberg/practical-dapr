@@ -1,12 +1,22 @@
 using DaprShop.Shopping.API.Services;
 
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 builder.Services.AddScoped<CartService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Shopping Cart API",
+        Description = "Shopping Cart Service"
+    });
+});
 
 var app = builder.Build();
 

@@ -1,5 +1,7 @@
 using DaprShop.Orders.API;
 
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
@@ -9,7 +11,15 @@ builder.Services.AddHostedService<LongRunningService>();
 builder.Services.AddSingleton<BackgroundWorkerQueue>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Orders API",
+        Description = "Ordering Service"
+    });
+});
 
 var app = builder.Build();
 

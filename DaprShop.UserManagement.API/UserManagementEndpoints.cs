@@ -7,23 +7,26 @@ public static class UserManagementEndpoints
 {
     public static void MapUserManagementEndpoints(this IEndpointRouteBuilder builder)
     {
-        var userRoutes = builder.MapGroup("users");
+        var userRoutes = builder
+            .MapGroup("users")
+            .WithTags(new []{"Users"})
+            .WithOpenApi();
 
         userRoutes.MapGet("get", async (string username, [FromServices] UserService userService) =>
         {
             User? user = await userService.GetUser(username);
             return user == null ? Results.NotFound() : Results.Ok(user);
         })
-            .WithName("GetUser")
-            .WithOpenApi();
+            .WithOpenApi()
+            .WithName("GetUser");
 
         userRoutes.MapGet("isRegistered", async (string username, [FromServices] UserService userService) =>
         {
             User? user = await userService.GetUser(username);
             return user == null ? Results.NotFound() : Results.Ok();
         })
-            .WithName("IsRegistered")
-            .WithOpenApi();
+            .WithOpenApi()
+            .WithName("IsRegistered");
 
         userRoutes.MapPost("register", async (RegisterUserRequest request, [FromServices] UserService userService) =>
         {
@@ -38,7 +41,7 @@ public static class UserManagementEndpoints
                 return Results.BadRequest(ex);
             }
         })
-            .WithName("RegisterUser")
-            .WithOpenApi();
+            .WithOpenApi()
+            .WithName("RegisterUser");
     }
 }
