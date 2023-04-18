@@ -3,226 +3,248 @@
 ## Install Dapr CLI
 
 ```ps1
+winget install Dapr.CLI
+```
 
-winget install Dapr.CLI.Preview
+## Running Dapr applications
 
-dapr init --runtime-version 1.9.5
+- [ ] TODO: Show how to run and debug multiple dapr applications
 
-
+```ps1
+dapr run --app-port 7108 --app-ssl --components-path ./components/ --app-id users-api -- dotnet run -lp https --project ./DaprShop.UserManagement.API/DaprShop.UserManagement.API.csproj
 ```
 
 ## Install Dapr VSCode Extension
 
-- check out the dashboard - http://localhost:8000/overview
+Install the [Dapr for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-dapr) extension.
 
-## Do some local development
+Check out the [docs](https://docs.dapr.io/developing-applications/local-development/ides/vscode/vscode-dapr-extension/) for Dapr for Visual Studio Code extension
 
-```sh
-dapr run --app-id myapp --dapr-http-port 3500 --components-path ./components
+Once you have your Dapr applications running with `dapr run`, check out the Dapr dashboard:
+- http://localhost:8000/overview
 
-Invoke-RestMethod -Uri 'http://localhost:3500/v1.0/secrets/my-secret-store/my-secret'
-
-Invoke-RestMethod -Uri 'http://localhost:3500/v1.0/secrets/my-secret-store/nested-secret:field1'
-
-```
+- [ ] TODO: Explain how to debug Dapr applications
 
 ## Sample Application
+
+### Initialize Dapr
+
+Initialize Dapr at the project root:
+
+```ps1
+dapr init
+```
+
+> NOTE: You need docker (or alternative) installed and running locally for Dapr to initialize and run
+
+### Create new .NET WebAPI project
+
+Create a new .NET Web API project:
 
 ```sh
 # Create a new WebAPI
 dotnet new webapi -n DaprShop.ShoppingCart.API
 cd DaprShop.ShoppingCart.API
+```
 
+### Add Dapr Packages
+
+Add the required Dapr NuGet packages:
+
+```sh
 # Add Dapr packages for ASP.NET Core
-dotnet add DaprShop.ShoppingCart.API.csproj package Dapr.Client
-
-dotnet add DaprShop.ShoppingCart.API.csproj package Dapr.AspNetCore
-
-# clean up the original sample code
-cd Controllers
-remove-item WeatherForecastController.cs
-
-# Add some domain entities
-cd..
-mkdir Domain
-cd Domain
-
-new-item ShoppingCartItem.cs
-new-item ShoppingCart.cs
-
-# Add some services
-cd ..
-mkdir Services
-cd Services
-new-item ShoppingCartService.cs
-
-# Add some controllers
-cd ..
-cd Controllers
-new-item ShoppingCartController.cs
-
-
+dotnet add package Dapr.Client
+dotnet add package Dapr.AspNetCore
 ```
 
+### Configure Dapr Client and Middleware in .NET WebAPI
 
-## Push to GitHub
+Add Dapr configuration code in `Program.cs`:
 
-## Automate the builds
+```cs
+var builder = WebApplication.CreateBuilder(args);
 
-Build app using Docker.
+builder.Services.AddDaprClient();
 
-Push to ACR.
+//...
 
-## Deploy to Azure
+var app = builder.Build();
 
+app.UseCloudEvents();
+app.MapSubscribeHandler();
 
+// ...
 
-
-## Running a dapr app
-
-https://www.codemag.com/article/2303081
-
-```ps1
-dapr run --app-id dapr-service --resources-path ../local-components/ --app-port 5190 -- dotnet run --project .
-
-dapr run --app-id shopping-cart-api --resources-path ../local-components/ --app-port 6000 -- dotnet run
-
-# run dapr daemon directly, then F5 to debug the app
-daprd --app-id shopping-cart-api --resources-path ../local-components/ --app-port 7000
-
+app.Run();
 ```
 
-https://docs.dapr.io/developing-applications/sdks/dotnet/dotnet-development/dotnet-development-tye/
+### Using Dapr Client
 
-https://swoopfunding.com/ca/swoop-engineering/microservices-with-dapr-mini-series-pub-sub-tye/
+- [ ] TODO
 
-https://markheath.net/post/running-locally-with-dapr-options
+### Listening for PubSub events
 
-https://code.benco.io/dapr-store/
+- [ ] TODO
 
+## DevOps
 
+- [ ] TODO: Complete devops story
 
+1. Deploy Bicep to create Azure Container App Environment, ACA Applications, Dapr Components, supporting infrastructure for state stores and pubsub
+2. Build apps using Docker
+3. Push to ACR
+4. Create revision on Azure Container Apps
 
-https://azure.github.io/aca-dotnet-workshop/aca/07-aca-cron-bindings/
+## YARP as API Gateway
 
-https://b-nova.com/en/home/content/how-microservice-developers-can-finally-concentrate-on-their-application-thanks-to-dapr
+[YARP: Yet Another Reverse Proxy](https://microsoft.github.io/reverse-proxy/)
 
+**Dapr** conveniently provide a [Service Invocation](https://docs.dapr.io/developing-applications/building-blocks/service-invocation/service-invocation-overview/) building block with built-in **Service Discovery**. This means we can avoid needing to know exact host names for the services we wish to invoke. Instead, we can identify services via a `Dapr App Id`.
 
-https://github.com/phongnguyend/Practical.CleanArchitecture/blob/master/src/Microservices/Services.Product/ClassifiedAds.Services.Product.Api/HostedServices/PublishEventService.cs
+**YARP** can match incoming requests on service specific routes (e.g `/cart`, `/orders`, `/products`) and forward the request to the appropriate backend service via the Dapr Sidecars.
 
-YARP Config for microservices:
-https://blog.antosubash.com/posts/netcore-microservice-with-abp-yarp-and-tye-part-7
+In the YARP configuration, for each service specific matched route add the `dapr-app-id` request header with a value of the universal `App Id`.
 
+Check out the Dapr [docs](https://docs.dapr.io/developing-applications/building-blocks/service-invocation/howto-invoke-discover-services/) for more details about Service Discovery.
 
-```ps1
-# Get Revision FQDN
-az containerapp revision list -g aca-dapr-shop -n gateway-api --query "[].properties.fqdn" -o tsv
+```json
+"DaprReverseProxy": {
+  "Routes": {
+    "users-api": {
+      "ClusterId": "daprSidecar",
+      // Match service specific route prefixes 
+      "Match": {
+        "Path": "/users/{*any}"
+      },
+      // add the dapr-app-id header and assign the appropriate app-id value 
+      "Transforms": [{
+          "RequestHeader": "dapr-app-id",
+          "Append": "users-api"
+      }]
+    },
+    //
+    // OTHER ROUTES
+    //
+  },
+  "Clusters": {
+    "daprSidecar": {
+      "Destinations": {
+        "sidecar": {
+          // forward all requests to a known sidecar - dapr will do the rest and forward to the appropriate sidecar for the target application as long as the `dapr-app-id` value is set correctly
+          "Address": "http://localhost:3500/"
+        }
+      }
+    }
+  }
+}
 ```
 
+## API Documentation with OpenAPI/Swagger
 
+Using [NSwag](https://github.com/RicoSuter/NSwag) (specifically [NSwag.AspNetCore](https://www.nuget.org/packages/NSwag.AspNetCore) and [NSwag.MsBuild](https://github.com/RicoSuter/NSwag/wiki/NSwag.MSBuild) NuGet packages)  we can generate OpenAPI 3.x or Swagger 2.x API Specification documents for an ASP.NET Core web application.
 
-https://github.com/Azure-Samples/dotNET-FrontEnd-to-BackEnd-with-DAPR-on-Azure-Container-Apps/tree/main
+For this repo, we used `Directory.Build.Props` to provide the ability for each microservice to produce an OpenAPI 3.x Specification using NSwag. Each microservice project will generate the `specification.json` file at build time and store it in the `/wwwroot/api/v1/` folder.
 
+A global `nswag.json` configuration file is used for producing the project specific OpenAPI spec documents. A set of variables specific to each project is passed to the `nswag` CLI to produce an appropriately described OpenAPI spec file.
 
-https://docs.apimatic.io/manage-apis/api-merging/
-
-
-## API Documentation
-
-### Swashbuckle ASP.NET Core CLI
-
-https://github.com/domaindrivendev/Swashbuckle.AspNetCore#using-the-tool-with-the-net-core-30-sdk-or-later
-
-From project root:
-
-```ps1
-# Create a tool manifest
-dotnet new tool-manifest
-
-# Install the Tool
-dotnet tool install --version 6.5.0 Swashbuckle.AspNetCore.Cli
-```
-
-To generate a swagger specification file, run the cli tool in your project folder:
-
-```ps1
-dotnet swagger tofile --output [output] [startupassembly] [swaggerdoc]
-```
-
-To automate the swagger file generation, modify your .csproj to always render out the `swagger.json` file after successful builds:
+To enable a project to automatically produce the OpenAPI spec file at build time, add the `ExportApiDocumentationOnBuild` property to a `PropertyGroup` in the `.csproj` file:
 
 ```xml
-<Project ...>
-
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="dotnet tool restore" />
-		<Exec Command="dotnet swagger tofile --output ../docs/openapi/my-swagger.json $(OutputPath)\$(AssemblyName).dll MyApiSpecDoc" />
-	</Target>
-
-</Project>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    ...
+    <ExportApiDocumentationOnBuild>true</ExportApiDocumentationOnBuild>
+    ...
+  </PropertyGroup>
 ```
 
-## Services
+> Note: I chose NSwag + OpenApi3 instead of Swagger to ensure that the `x-enumNames` are used to describe `Enum` fields with string name equivalents. Having the string names for enum flags allows the CS/TS generated code to function exactly as expected.
 
-### Cart Service
+- [ ] TODO: Generate C# / TypeScript client for API Gateway
+- [ ] TODO: Publish Generated clients to NuGet / npmjs
 
-- `POST /cart/add/{userId}/{productid}/{quantity}`
-  - add a number of products in the cart of a given user
-- `GET /cart/{userid}`
-  - cart for user
-- `POST /cart/clear/{userid}`
-  - clear a users cart
-- `POST /cart/submit/{userid}`
-  - submit a cart and turn it into an Order
+## Configuring OpenAPI in ASP.NET Core WebAPI
 
-#### Dapr Interaction
+In your `Program.cs`, add the following OpenAPI configuration:
 
-- Pub/Sub
-  - The cart pushes Order entities to the orders-queue topic to be collected by the orders service
-- State
-  - Stores and retrieves Cart entities from the state service, keyed on userId.
-- Service Invocation
-  - Cross service call to products API to lookup and check products in the cart
+```cs
+// Enable Endpoint explorer to provide metadata for OpenAPI/Swagger document generation
+builder.Services.AddEndpointsApiExplorer();
 
-### Orders Service
+// Enable OpenAPI Document generation
+builder.Services.AddOpenApiDocument(options =>
+{
+  options.DocumentName = "v1";
+  options.Version = "v1";
+  options.Title = "Users API";
+  options.Description = "User Management Service";
+});
 
-Aka Kitchen Service / Manufacturing Service.
+var app = builder.Build();
 
-The service provides some fake order processing activity so that orders are moved through a number of statuses, simulating some back-office systems or inventory management.
+// other middlewares...
 
-Orders are initially set to `OrderReceived` status, then after 30 seconds moved to `OrderProcessing`, then after 2 minutes moved to `OrderComplete`.
+// Serve static files - Since we generate the specification.json file at build time, we don't need to regenerate it at runtime. We simply serve the specification.json file as static content. 
+// We also use the service specific route prefix so that requests to the spec would follow this pattern: https://<hostname>/<service-route-prefix>/api/v1/specification.json
+//
+// e.g. https://mydaprshop.com/users/api/v1/specification.json
+//
+app.UseStaticFiles(new StaticFileOptions()
+{
+  RequestPath = "/users"
+});
 
+app.UseSwaggerUi3(c =>
+{
+  c.Path = "/users/api";
+  c.DocumentPath = "/users/api/v1/specification.json";
+});
+```
 
-/get/{id}                GET a single order by orderID
-/getForUser/{userId}   GET all orders for a given user
+### Documenting your API
 
+Describe your minimal endpoints or controller actions using the OpenAPI decorations.
 
-#### Dapr Interaction
+For all available options, check out: [OpenAPI support in minimal API apps](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/openapi?view=aspnetcore-7.0)
 
-- Pub/Sub
-  - Subscribes to the `orders-queue` topic to receive new orders from the cart service
-- State
-  - Stores and retrieves `Order` entities from the state service, keyed on `OrderID`. Also lists of orders per user, held as an array of OrderIDs and keyed on userId
-- Bindings
-  - All output bindings are optional, the service operates without these present
-- Azure Blob
-  - For saving “order reports” as text files into Azure Blob storage
-- SendGrid
-  - For sending emails to users via SendGrid
+For Minimal endpoints, describe a group of endpoints for a service by adding a tag with `WithTags()`. This will nicely group the operations together for each microservice. Useful for the CS/TS client generation and display in the Swagger UI.
 
+```cs
+// Tag a group of endpoints with a single tag using WithTags()
+IEndpointRouteBuilder userRoutes = builder
+  .MapGroup("users")
+  .WithTags(new[] { "Users" });
 
-### Users service
+// Add Operation Name/ID using WithName
+userRoutes.MapGet("get", async (string username, [FromServices] UserService userService) =>
+{
+  User? user = await userService.GetUser(username);
+  return user == null ? Results.NotFound() : Results.Ok(user);
+})
+  .WithName("GetUser");
+```
 
-Simple user profile service. Only registered users can use the store to place orders etc.
+## Merging APIs
 
-/register               POST a new user to register them
-/get/{userId}           GET the user profile for given user
-/private/get/{userId}   GET the user profile for given user. Private endpoints are NOT exposed through the gateway
-/isregistered/{userId}  GET the registration status for a given user
+Use the `merge-apis.ps1` script to produce a single OpenAPI Spec that includes operations from all the available microservices OpenAPI specs.
 
-The service is notable as it consists of a mix of both secured API routes, and two that are anonymous/open /isregistered and /private/get
+> **Warning**
+> The `merge-apis.ps1` script is not very configurable right now as it does a straight forward deep merge of the OpenAPI json objects. This is particularly bad if two or more projects declare objects with the same name but different fields. For example, the `Order` class might be used described in multiple projects with different fields, but after the merge only one `Order` component will exist in the OpenAPI spec and it is not guaranteed to align with the service specific interface. Eventually, we want to end up with something like [API Matic - Merge Multiple API Definitions](https://docs.apimatic.io/manage-apis/api-merging/)
 
-#### Dapr Integration
+- [ ] TODO: Add property merge options (keep left, take right, rename-suffix)
 
-- State
-  - Stores and retrieves User entities from the state service, keyed on userId.
+## Useful Links
+
+- [Building an Event-Driven .NET Core App with Dapr in .NET 7 Core](https://www.codemag.com/article/2303081)
+
+- [Dapr .NET SDK Development with Docker-Compose](https://docs.dapr.io/developing-applications/sdks/dotnet/dotnet-development/dotnet-development-docker-compose/)
+
+- [Microservices with Dapr mini-series (Pub/Sub + Tye)](https://swoopfunding.com/ca/swoop-engineering/microservices-with-dapr-mini-series-pub-sub-tye/)
+
+- [Azure Container Apps - Workshop](https://azure.github.io/aca-dotnet-workshop/)
+
+- [Dapr - As a microservice developer, finally focus on the application code again.](https://b-nova.com/en/home/content/how-microservice-developers-can-finally-concentrate-on-their-application-thanks-to-dapr)
+
+- [Secure .NET microservices with Azure Container Apps and DAPR](https://medium.com/vx-company/secure-net-microservices-with-azure-container-apps-and-dapr-e122c6ea0aac)
+
+- [ASP.NET Core Front-end + 2 Back-end APIs on Azure Container Apps](https://github.com/Azure-Samples/dotNET-FrontEnd-to-BackEnd-with-DAPR-on-Azure-Container-Apps/tree/main)
