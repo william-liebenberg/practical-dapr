@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
+	.AddReverseProxy()
+	.LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -12,7 +12,7 @@ builder.Services.AddOpenApiDocument(options =>
 {
 	options.DocumentName = "v1";
 	options.Version = "v1";
-	options.Title = "DaprShop Gateway API"; 
+	options.Title = "DaprShop Gateway API";
 	options.Description = "All shop services";
 });
 
@@ -29,7 +29,7 @@ app.UseSwaggerUi3(c =>
 
 	// make sure we add the merged api gateway OpenApiSpec doc
 	c.SwaggerRoutes.Add(new NSwag.AspNetCore.SwaggerUi3Route("DaprShop Gateway", "/api/v1/daprshop.json"));
-	
+
 	// add all the openapi spec routes for each of the configured downstream services
 	ApiRouteConfig[]? apiRoutes = builder.Configuration.GetSection("ApiRoutes").Get<ApiRouteConfig[]>();
 	if (apiRoutes != null)
@@ -47,12 +47,12 @@ app.UseSwaggerUi3(c =>
 
 app.MapGet("info", ([FromServices] IConfiguration config) =>
 {
-    IConfigurationSection apiRoutesSection = config.GetSection("ApiRoutes");
-    ApiRouteConfig[]? routes = apiRoutesSection.Get<ApiRouteConfig[]>();
-    return Task.FromResult(Results.Ok(routes));
+	IConfigurationSection apiRoutesSection = config.GetSection("ApiRoutes");
+	ApiRouteConfig[]? routes = apiRoutesSection.Get<ApiRouteConfig[]>();
+	return Task.FromResult(Results.Ok(routes));
 })
-    //.WithOpenApi()
-    .WithTags(new []{"Gateway"})
-    .WithName("Info");
+	//.WithOpenApi()
+	.WithTags(new[] { "Gateway" })
+	.WithName("Info");
 
 app.Run();

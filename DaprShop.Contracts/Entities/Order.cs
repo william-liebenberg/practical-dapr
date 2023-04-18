@@ -2,10 +2,10 @@
 
 public enum OrderStatus
 {
-    OrderNew,
-    OrderReceived,
-    OrderProcessing,
-    OrderComplete
+	OrderNew,
+	OrderReceived,
+	OrderProcessing,
+	OrderComplete
 }
 
 // LineItem is a simple line on an order, a tuple of count and a Product struct

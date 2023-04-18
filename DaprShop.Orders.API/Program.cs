@@ -12,10 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApiDocument(options =>
 {
-   options.DocumentName = "v1";
-   options.Version = "v1";
-   options.Title = "Orders API";
-   options.Description = "Ordering Service";
+	options.DocumentName = "v1";
+	options.Version = "v1";
+	options.Title = "Orders API";
+	options.Description = "Ordering Service";
 });
 
 var app = builder.Build();
@@ -25,7 +25,7 @@ app.MapSubscribeHandler();
 
 app.UseStaticFiles(new StaticFileOptions()
 {
-   RequestPath = "/orders"
+	RequestPath = "/orders"
 });
 
 app.UseSwaggerUi3(c =>
