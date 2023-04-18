@@ -28,8 +28,6 @@
 
         <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
         <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
-
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/wwwroot/api/v1/specification.json" DestinationFiles="$([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(MSBuildProjectName)-openapi.json" />
     </Target>
 
 </Project>

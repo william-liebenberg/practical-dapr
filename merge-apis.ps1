@@ -33,9 +33,8 @@ function Merge-Objects($source, $extend) {
     return $extended
 }
 
-# All the spec files to merge
-$specFolder = "./docs/openapi"
-$specFiles = Get-ChildItem -Path $specFolder -Filter *.json -Recurse -File -Name
+# Find all the spec files to merge
+$specFiles = Get-ChildItem -Filter specification.json -Recurse -File -Name
 
 # Loop through all the spec files and merge them one by one
 $merged = [PSCustomObject]@{}
