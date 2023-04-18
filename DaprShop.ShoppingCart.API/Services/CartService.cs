@@ -134,7 +134,7 @@ public class CartService
     }
 
     // sumbit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
-    public async Task<Order?> Submit(string username)
+    public async Task<Order?> SubmitNewOrder(string username)
     {
         Cart? cart = await GetCart(username);
         if(cart is null || cart.IsEmpty())
@@ -144,7 +144,7 @@ public class CartService
 
         var order = new Order
             (
-                Status:         OrderStatus.OrderNew,
+                Status:         OrderStatus.OrderNew, // TODO: Do we really need to say its a new order when submitting a new order?
                 OrderId:        Guid.NewGuid().ToString(),
                 Username:       username,
                 Title:          $"Order {DateTime.Now.ToShortDateString()}",

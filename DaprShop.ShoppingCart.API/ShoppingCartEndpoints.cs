@@ -10,9 +10,9 @@ public static class ShoppingCartEndpoints
     public static IEndpointRouteBuilder MapShoppingCartRoutes(this IEndpointRouteBuilder builder)
     {
         var cartRoutes = builder
-            .MapGroup("cart")
-            .WithTags(new []{"Cart"})
-            .WithOpenApi();
+			//.WithOpenApi()
+			.MapGroup("cart")
+            .WithTags(new []{"Cart"});
 
         cartRoutes.MapGet("get", async (string username, [FromServices] CartService cartService) =>
         {
@@ -26,7 +26,7 @@ public static class ShoppingCartEndpoints
                 return Results.BadRequest(ex);
             }
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("GetCart"); ;
 
         cartRoutes.MapPost("items", async ([FromBody] AddProductItemToCart item, [FromServices] CartService cartService) =>
@@ -41,14 +41,14 @@ public static class ShoppingCartEndpoints
                 return Results.BadRequest(ex);
             }
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("AddItem"); ;
 
         cartRoutes.MapPost("submit", async ([FromBody] SubmitCartRequest req, [FromServices] CartService cartService) =>
         {
             try
             {
-                Order? order = await cartService.Submit(req.Username);
+                Order? order = await cartService.SubmitNewOrder(req.Username);
                 return order is null ? Results.BadRequest() : Results.Ok(order);
             }
             catch (Exception ex)
@@ -56,7 +56,7 @@ public static class ShoppingCartEndpoints
                 return Results.BadRequest(ex);
             }
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("SubmitOrder");
 
 
@@ -71,7 +71,7 @@ public static class ShoppingCartEndpoints
             return Results.Ok();
         })
             .WithTopic(pubsubName, cartTopic)
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("ItemAdded");
 
         cartRoutes.MapPost("removed", ([FromBody] ProductItemRemovedFromCart @event) =>
@@ -80,7 +80,7 @@ public static class ShoppingCartEndpoints
             return Results.Ok();
         })
             .WithTopic(pubsubName, cartTopic)
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("ItemRemoved");
 
         cartRoutes.MapPost("cleared", ([FromBody] CartCleared @event) =>
@@ -89,7 +89,7 @@ public static class ShoppingCartEndpoints
             return Results.Ok();
         })
             .WithTopic(pubsubName, cartTopic)
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("Cleared");
 
         cartRoutes.MapPost("StatusChanged", ([FromBody] OrderStatusChanged @event) =>
@@ -98,7 +98,7 @@ public static class ShoppingCartEndpoints
             return Results.Ok();
         })
             .WithTopic(pubsubName, cartTopic)
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("StatusChanged");
         
         return builder;

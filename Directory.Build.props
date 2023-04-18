@@ -8,10 +8,28 @@
         <ApiDocumentationVersion>v1</ApiDocumentationVersion>
     </PropertyGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ExportApiDocumentationOnBuild)' == 'true'">
-        <Exec Command="dotnet tool restore" />
-        <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)"/>
-        <Exec Command="dotnet swagger tofile --output $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(ProjectName)-openapi.json $(OutputPath)\$(AssemblyName).dll $(ApiDocumentationVersion)" />
+    <PropertyGroup>
+        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(ExportApiDocumentationOnBuild)' == 'true'">
+        <PackageReference Include="NSwag.AspNetCore" Version="13.18.2" />
+        <PackageReference Include="NSwag.MSBuild" Version="13.18.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="NSwag" AfterTargets="PostBuildEvent" Condition="'$(ExportApiDocumentationOnBuild)' == 'true' AND '$(Configuration)' == 'Debug'">
+        <Exec ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(MSBuildProjectDirectory)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net70) run $([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/nswag.json /variables:Project=$(MSBuildProjectFullPath),WorkingDirectory=$(MSBuildProjectDirectory),Configuration=$(Configuration),DocumentTitle=$(MSBuildProjectName),SpecOutputPath=$(MSBuildProjectDirectory)/wwwroot/api/v1/specification.json">
+            <Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
+            <Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
+        </Exec>
+
+        <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
+        <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+
+        <Copy SourceFiles="$(MSBuildProjectDirectory)/wwwroot/api/v1/specification.json" DestinationFiles="$([System.IO.Path]::GetDirectoryName('$(MSBuildThisFileDirectory)\'))/$(ApiDocumentationDirectory)/$(MSBuildProjectName)-openapi.json" />
     </Target>
 
 </Project>

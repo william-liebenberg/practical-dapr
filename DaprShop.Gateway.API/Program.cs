@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,50 +7,43 @@ builder.Services
     .LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => 
+
+builder.Services.AddOpenApiDocument(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "DaprShop Gateway API",
-        Description = "All shop services"
-    });
+	options.DocumentName = "v1";
+	options.Version = "v1";
+	options.Title = "DaprShop Gateway API"; 
+	options.Description = "All shop services";
 });
 
 var app = builder.Build();
 
 app.MapReverseProxy();
 
-app.UseSwagger(options =>
-{
-    options.RouteTemplate = "swagger/{documentName}/swagger.json";
-});
-
-app.UseSwaggerUI(setup =>
-{
-    setup.RoutePrefix = string.Empty;
-    setup.SwaggerEndpoint("swagger/v1/daprshop.json", "DaprShop API Gateway");
-    setup.ConfigObject.DisplayRequestDuration = true;
-
-    // both flags work to enable the `url.primaryName` query parameter to be respected
-    // see: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2516
-    setup.ConfigObject.DeepLinking = true;
-    setup.ConfigObject.AdditionalItems["queryConfigEnabled"] = true;
-
-    IConfigurationSection apiRoutesSection = builder.Configuration.GetSection("ApiRoutes");
-    ApiRouteConfig[]? apiRoutes = apiRoutesSection.Get<ApiRouteConfig[]>();
-    if(apiRoutes != null)
-    {
-        foreach (ApiRouteConfig route in apiRoutes)
-        {
-            var swaggerJsonEndpoint = $"{route.RoutePrefix}/{route.SwaggerJsonUrl}";
-            Console.WriteLine($"Adding Swagger Endpoint: {swaggerJsonEndpoint}");
-            setup.SwaggerEndpoint(swaggerJsonEndpoint, route.RouteName);
-        }
-    }
-});
-
 app.UseStaticFiles();
+
+app.UseSwaggerUi3(c =>
+{
+	// set the swagger ui prefix
+	c.Path = "/api";
+
+	// make sure we add the merged api gateway OpenApiSpec doc
+	c.SwaggerRoutes.Add(new NSwag.AspNetCore.SwaggerUi3Route("DaprShop Gateway", "/api/v1/daprshop.json"));
+	
+	// add all the openapi spec routes for each of the configured downstream services
+	ApiRouteConfig[]? apiRoutes = builder.Configuration.GetSection("ApiRoutes").Get<ApiRouteConfig[]>();
+	if (apiRoutes != null)
+	{
+		foreach (ApiRouteConfig route in apiRoutes)
+		{
+			var swaggerJsonEndpoint = $"{route.RoutePrefix}/{route.OpenApiSpecUrl}";
+			Console.WriteLine($"Adding Swagger Endpoint: {swaggerJsonEndpoint}");
+			c.SwaggerRoutes.Add(new NSwag.AspNetCore.SwaggerUi3Route(route.RouteName, swaggerJsonEndpoint));
+		}
+	}
+
+	c.DocExpansion = "list";
+});
 
 app.MapGet("info", ([FromServices] IConfiguration config) =>
 {
@@ -59,7 +51,7 @@ app.MapGet("info", ([FromServices] IConfiguration config) =>
     ApiRouteConfig[]? routes = apiRoutesSection.Get<ApiRouteConfig[]>();
     return Task.FromResult(Results.Ok(routes));
 })
-    .WithOpenApi()
+    //.WithOpenApi()
     .WithTags(new []{"Gateway"})
     .WithName("Info");
 

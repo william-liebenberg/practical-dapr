@@ -4,7 +4,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "cart/swagger",
+      "launchUrl": "cart/api",
       "applicationUrl": "http://localhost:18000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -13,7 +13,7 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "cart/swagger",
+      "launchUrl": "cart/api",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -23,7 +23,7 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "cart/swagger",
+      "launchUrl": "cart/api",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

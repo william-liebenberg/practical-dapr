@@ -56,6 +56,6 @@ $merged.info.title = "My DaprShop API"
 $merged.info.description = "My DaprShop API"
 
 # Save the merged Spec
-$destination="./DaprShop.Gateway.API/wwwroot/swagger/v1/daprshop.json"
+$destination="./DaprShop.Gateway.API/wwwroot/api/v1/daprshop.json"
 New-Item -ItemType File -Path $destination -Force | Out-Null
 $merged | ConvertTo-Json -Depth 100 | Out-File -FilePath $destination

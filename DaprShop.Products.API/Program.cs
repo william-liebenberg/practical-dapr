@@ -1,21 +1,18 @@
 using DaprShop.Products.API;
 
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+
+builder.Services.AddOpenApiDocument(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Products API",
-        Description = "Products Service"
-    });
+	options.DocumentName = "v1";
+	options.Version = "v1";
+	options.Title = "Products API";
+	options.Description = "Product Service";
 });
 
 var app = builder.Build();
@@ -23,17 +20,17 @@ var app = builder.Build();
 app.UseCloudEvents();
 app.MapSubscribeHandler();
 
-app.UseSwagger(c =>
+app.UseStaticFiles(new StaticFileOptions()
 {
-    c.RouteTemplate = "products/swagger/{documentName}/swagger.json";
+	RequestPath = "/products"
 });
 
-app.UseSwaggerUI(o =>
+app.UseSwaggerUi3(c =>
 {
-    o.SwaggerEndpoint("v1/swagger.json", "v1");
-    o.RoutePrefix = "products/swagger";
+	c.Path = "/products/api";
+	c.DocumentPath = "/products/api/v1/specification.json";
 });
 
 app.MapProductEndpoints();
- 
+
 app.Run();

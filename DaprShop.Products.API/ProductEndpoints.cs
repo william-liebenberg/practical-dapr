@@ -6,17 +6,18 @@ public static class ProductEndpoints
 {
     public static void MapProductEndpoints(this IEndpointRouteBuilder builder)
     {
-        var endpoints = builder
-            .MapGroup("products")
-            .WithTags(new []{"Products"})
-            .WithOpenApi();
+		var endpoints = builder
+			//.WithOpenApi()
+			.MapGroup("products")
+			.WithTags(new[] { "Products" });
+            
 
         endpoints.MapGet("get", async (string productId, [FromServices] ProductService productService) =>
         {
             var result = await productService.GetProduct(productId);
             return result == null ? Results.NotFound() : Results.Ok(result);
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("GetProduct");
 
         endpoints.MapGet("catalogue", async ([FromServices] ProductService productService) =>
@@ -24,7 +25,7 @@ public static class ProductEndpoints
             var results = await productService.ListAll();
             return Results.Ok(results);
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("GetCatalogue");
 
         endpoints.MapGet("search", async (string field, string searchTerm, [FromServices] ProductService productService) =>
@@ -32,7 +33,7 @@ public static class ProductEndpoints
             var results = await productService.Search(field, searchTerm);
             return Results.Ok(results);
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("Search");
 
         endpoints.MapPost("seed", async ([FromServices] ProductService productService) =>
@@ -40,7 +41,7 @@ public static class ProductEndpoints
             await productService.Seed();
             return Results.Ok();
         })
-            .WithOpenApi()
+            //.WithOpenApi()
             .WithName("Seed");
     }
 }

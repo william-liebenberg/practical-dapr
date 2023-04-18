@@ -3,163 +3,161 @@
     "schemas": {
       "Order": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "orderId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "title": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "totalAmount": {
             "type": "number",
-            "format": "double"
+            "format": "decimal"
           },
           "items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/OrderItem"
-            },
-            "nullable": true
+            }
           },
           "status": {
             "$ref": "#/components/schemas/OrderStatus"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "OrderItem": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "quantity": {
             "type": "integer",
             "format": "int32"
           },
           "productId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "OrderStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "OrderNew",
+          "OrderReceived",
+          "OrderProcessing",
+          "OrderComplete"
+        ],
         "enum": [
           0,
           1,
           2,
           3
-        ],
-        "type": "integer",
-        "format": "int32"
+        ]
       },
       "AddProductItemToCart": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "productId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "quantity": {
             "type": "integer",
             "format": "int32"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CartCleared": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "OrderStatusChanged": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "orderId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "currentStatus": {
-            "$ref": "#/components/schemas/OrderStatus"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrderStatus"
+              }
+            ]
           },
           "previousStatus": {
-            "$ref": "#/components/schemas/OrderStatus"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OrderStatus"
+              }
+            ]
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ProductItemAddedToCart": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "productId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ProductItemRemovedFromCart": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "productId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "SubmitCartRequest": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "RegisterUserRequest": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "displayName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "profileImageUrl": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
-        },
-        "additionalProperties": false
+        }
       }
     }
   },
@@ -168,7 +166,7 @@
     "description": "My DaprShop API",
     "version": "v1"
   },
-  "openapi": "3.0.1",
+  "openapi": "3.0.0",
   "paths": {
     "/info": {
       "get": {
@@ -178,7 +176,7 @@
         "operationId": "Info",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -194,15 +192,16 @@
             "name": "orderId",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -214,6 +213,8 @@
         ],
         "operationId": "ReceiveOrder",
         "requestBody": {
+          "x-name": "order",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -221,11 +222,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -241,15 +243,16 @@
             "name": "username",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -262,7 +265,7 @@
         "operationId": "GetCatalogue",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -278,15 +281,16 @@
             "name": "productId",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -302,24 +306,26 @@
             "name": "field",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           },
           {
             "name": "searchTerm",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -332,7 +338,7 @@
         "operationId": "Seed",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -344,6 +350,8 @@
         ],
         "operationId": "ItemAdded",
         "requestBody": {
+          "x-name": "event",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -351,11 +359,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -367,6 +376,8 @@
         ],
         "operationId": "Cleared",
         "requestBody": {
+          "x-name": "event",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -374,11 +385,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -394,15 +406,16 @@
             "name": "username",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -414,6 +427,8 @@
         ],
         "operationId": "AddItem",
         "requestBody": {
+          "x-name": "item",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -421,11 +436,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -437,6 +453,8 @@
         ],
         "operationId": "ItemRemoved",
         "requestBody": {
+          "x-name": "event",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -444,11 +462,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -460,6 +479,8 @@
         ],
         "operationId": "StatusChanged",
         "requestBody": {
+          "x-name": "event",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -467,11 +488,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -483,6 +505,8 @@
         ],
         "operationId": "SubmitOrder",
         "requestBody": {
+          "x-name": "req",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -490,11 +514,12 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -510,15 +535,16 @@
             "name": "username",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -534,15 +560,16 @@
             "name": "username",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
@@ -554,6 +581,8 @@
         ],
         "operationId": "RegisterUser",
         "requestBody": {
+          "x-name": "request",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -561,14 +590,16 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": ""
           }
         }
       }
     }
-  }
+  },
+  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))"
 }

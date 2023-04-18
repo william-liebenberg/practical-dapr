@@ -16,7 +16,7 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+http://\\S+:([0-9]+)",
-                "uriFormat": "http://localhost:%s/swagger"
+                "uriFormat": "http://localhost:%s/api"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -40,7 +40,7 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+http://\\S+:([0-9]+)",
-                "uriFormat": "http://localhost:%s/swagger"
+                "uriFormat": "http://localhost:%s/api"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -69,7 +69,7 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+http://\\S+:([0-9]+)",
-                "uriFormat": "http://localhost:%s/swagger"
+                "uriFormat": "http://localhost:%s/api"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -94,7 +94,7 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+http://\\S+:([0-9]+)",
-                "uriFormat": "http://localhost:%s/swagger"
+                "uriFormat": "http://localhost:%s/api"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"

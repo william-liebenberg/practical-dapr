@@ -156,7 +156,7 @@ To automate the swagger file generation, modify your .csproj to always render ou
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="dotnet tool restore" />
-		<Exec Command="dotnet swagger tofile --output ../docs/SwaggerFiles/my-swagger.json $(OutputPath)\$(AssemblyName).dll MyApiSpecDoc" />
+		<Exec Command="dotnet swagger tofile --output ../docs/openapi/my-swagger.json $(OutputPath)\$(AssemblyName).dll MyApiSpecDoc" />
 	</Target>
 
 </Project>

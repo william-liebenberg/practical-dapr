@@ -1,21 +1,18 @@
 using DaprShop.Shopping.API.Services;
 
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 builder.Services.AddScoped<CartService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+
+builder.Services.AddOpenApiDocument(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Shopping Cart API",
-        Description = "Shopping Cart Service"
-    });
+	options.DocumentName = "v1";
+	options.Version = "v1";
+	options.Title = "Shopping Cart API";
+	options.Description = "Shopping Cart Service";
 });
 
 var app = builder.Build();
@@ -23,15 +20,15 @@ var app = builder.Build();
 app.UseCloudEvents();
 app.MapSubscribeHandler();
 
-app.UseSwagger(c =>
+app.UseStaticFiles(new StaticFileOptions()
 {
-    c.RouteTemplate = "cart/swagger/{documentName}/swagger.json";
+	RequestPath = "/cart"
 });
 
-app.UseSwaggerUI(o =>
+app.UseSwaggerUi3(c =>
 {
-    o.SwaggerEndpoint("v1/swagger.json", "v1");
-    o.RoutePrefix = "cart/swagger";
+	c.Path = "/cart/api";
+	c.DocumentPath = "/cart/api/v1/specification.json";
 });
 
 app.MapShoppingCartRoutes();

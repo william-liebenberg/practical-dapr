@@ -1,21 +1,18 @@
 using DaprShop.UserManagement.API;
 
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+
+builder.Services.AddOpenApiDocument(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "Users API",
-        Description = "User Management Service"
-    });
+	options.DocumentName = "v1";
+	options.Version = "v1";
+	options.Title = "Users API";
+	options.Description = "User Management Service";
 });
 
 var app = builder.Build();
@@ -23,15 +20,15 @@ var app = builder.Build();
 app.UseCloudEvents();
 app.MapSubscribeHandler();
 
-app.UseSwagger(c =>
+app.UseStaticFiles(new StaticFileOptions()
 {
-    c.RouteTemplate = "users/swagger/{documentName}/swagger.json";
+	RequestPath = "/users"
 });
 
-app.UseSwaggerUI(o =>
+app.UseSwaggerUi3(c =>
 {
-    o.SwaggerEndpoint("v1/swagger.json", "v1");
-    o.RoutePrefix = "users/swagger";
+	c.Path = "/users/api";
+	c.DocumentPath = "/users/api/v1/specification.json";
 });
 
 app.MapUserManagementEndpoints();
