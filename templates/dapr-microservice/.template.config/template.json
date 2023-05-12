@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "William Liebenberg",
+    "classifications": [ "Web", "Microservice" ],
+    "identity": "DaprShop.Microservice",
+    "name": "Dapr Microservice project",
+    "shortName": "dapr-microservice",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "XsafeprojectnameX"
+}
