@@ -1,4 +1,4 @@
-﻿using DaprShop.Products.API;
+﻿namespace DaprShop.Products.API;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +35,14 @@ public static class ProductEndpoints
 		})
 			//.WithOpenApi()
 			.WithName("Search");
+
+		endpoints.MapGet("query", async (string searchTerm, [FromServices] ProductService productService) =>
+		{
+			var results = await productService.Query(searchTerm);
+			return Results.Ok(results);
+		})
+			//.WithOpenApi()
+			.WithName("Query");
 
 		endpoints.MapPost("seed", async ([FromServices] ProductService productService) =>
 		{

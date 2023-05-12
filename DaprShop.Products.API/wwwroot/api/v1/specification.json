@@ -80,12 +80,50 @@
         }
       }
     },
+    "/products/query": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Query",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/seed": {
       "post": {
         "tags": [
           "Products"
         ],
         "operationId": "Seed",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/products/notify": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Notify",
         "responses": {
           "200": {
             "description": ""

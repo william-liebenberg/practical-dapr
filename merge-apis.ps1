@@ -41,7 +41,7 @@ $merged = [PSCustomObject]@{}
 foreach($specFile in $specFiles) {
     Write-Host "Merging spec: $($specFile)" -ForegroundColor Green -NoNewline
     try {
-        $spec = Get-Content -Path (Join-Path -Path $specFolder -ChildPath $specFile) -Raw | ConvertFrom-Json
+        $spec = Get-Content -Path $specFile -Raw | ConvertFrom-Json
         $merged = Merge-Objects $spec $merged
         Write-Host "...✅ Done!"
     }

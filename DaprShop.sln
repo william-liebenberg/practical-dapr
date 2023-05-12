@@ -22,7 +22,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Orders.API", "Dapr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Gateway.API", "DaprShop.Gateway.API\DaprShop.Gateway.API.csproj", "{0628D502-1110-487E-A512-2A36999C7D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaprShop.DaprExtensions", "DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj", "{798FCF58-A88D-41A7-B238-39E79EF95F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.DaprExtensions", "DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj", "{798FCF58-A88D-41A7-B238-39E79EF95F4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr-components", "dapr-components", "{C6EAA860-164F-40B6-812E-5D31CC229960}"
+	ProjectSection(SolutionItems) = preProject
+		components\pubsub.yaml = components\pubsub.yaml
+		components\statestore.yaml = components\statestore.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

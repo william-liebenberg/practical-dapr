@@ -295,6 +295,44 @@
         }
       }
     },
+    "/products/notify": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Notify",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/products/query": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Query",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/search": {
       "get": {
         "tags": [

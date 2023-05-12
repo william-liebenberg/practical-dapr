@@ -33,14 +33,22 @@ public class ProductService
 	// Search
 	public async Task<IEnumerable<Product>> Search(string field, string searchTerm)
 	{
-		string query = "";
+		//if(!string.Equals(field, "unitprice",  StringComparison.OrdinalIgnoreCase))
+		//{
+		//	searchTerm = $"\"{searchTerm}\"";
+		//}
+
+		string query = $$"""
+			{
+				"filter": {
+					"EQ": { "{{field}}": {{searchTerm}} }
+				}
+			}
+			""";
+
 		try
 		{
-			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query);
-			if (!string.IsNullOrWhiteSpace(results.Token))
-			{
-			}
-
+			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query, cancellationToken: CancellationToken.None);
 			return results.Results.Select(i => i.Data);
 		}
 		catch (DaprException dx)
@@ -53,14 +61,24 @@ public class ProductService
 	// Query (just check name / description)
 	public async Task<IEnumerable<Product>> Query(string searchTerm)
 	{
-		string query = "";
+		string query = $$"""
+			{
+				"filter": {
+					"OR": [
+						{
+							"EQ": { "name": "{{searchTerm}}" }
+						},
+						{
+							"EQ": { "description": "{{searchTerm}}" }
+						}
+					]
+				}
+			}
+			""";
+
 		try
 		{
-			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query);
-			if (!string.IsNullOrWhiteSpace(results.Token))
-			{
-			}
-
+			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query, cancellationToken: CancellationToken.None);
 			return results.Results.Select(i => i.Data);
 		}
 		catch (DaprException dx)
@@ -73,10 +91,11 @@ public class ProductService
 	// All
 	public async Task<IEnumerable<Product>> ListAll()
 	{
-		string query = "";
+		string query = "{}";
+		
 		try
 		{
-			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query);
+			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query, cancellationToken: CancellationToken.None);
 			if (!string.IsNullOrWhiteSpace(results.Token))
 			{
 			}

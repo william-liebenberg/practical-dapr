@@ -3,7 +3,6 @@ using Dapr.Client;
 
 using DaprShop.Contracts.Entities;
 using DaprShop.Contracts.Events;
-using DaprShop.DaprExtensions;
 
 namespace DaprShop.Shopping.API.Services;
 
@@ -26,8 +25,8 @@ public class CartService
 	public async Task AddItemToShoppingCart(string username, string productId, int quantity)
 	{
 		// first check if product is valid (and in stock) by calling product service to get details of Product (via productId)
-		HttpRequestMessage productRequest = _dapr.CreateInvokeMethodRequest(HttpMethod.Get, "products-api", $"/products/get?productId={productId}", string.Empty);
-		var product = await _dapr.TryInvokeMethodAsync<Product>(productRequest);
+		var productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+		var product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={productId}");
 		if (product == null)
 		{
 			_logger.LogInformation("Could not retrieve product with Id {productId} from Product Service", productId);
@@ -39,8 +38,8 @@ public class CartService
 		}
 
 		// check if the user is valid (registered) by calling the user service to get the details of the User (via username)
-		HttpRequestMessage userRequest = _dapr.CreateInvokeMethodRequest(HttpMethod.Get, "users-api", $"/users/get?username={username}", string.Empty);
-		var user = await _dapr.TryInvokeMethodAsync<User>(userRequest);
+		var usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+		var user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={username}");
 		if (user == null)
 		{
 			_logger.LogInformation("Could not retrieve user {username} from User Service", username);
@@ -133,7 +132,7 @@ public class CartService
 		}
 	}
 
-	// sumbit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
+	// submit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
 	public async Task<Order?> SubmitNewOrder(string username)
 	{
 		Cart? cart = await GetCart(username);
