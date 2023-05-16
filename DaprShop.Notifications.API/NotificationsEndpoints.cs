@@ -26,20 +26,36 @@ public static class NotificationsEndpoints
 		{
 			Console.WriteLine($"Received OrderCompleted: {orderCompletedEvent.OrderId} for {orderCompletedEvent.Username}");
 
-			Order order = await dapr.GetStateAsync<Order>(StateStoreName, orderCompletedEvent.OrderId);
-			User user = await dapr.GetStateAsync<User>(StateStoreName, orderCompletedEvent.Username);
+			// Can't call directly into the state store of other services... the key is prefixed with the owner's appid
+			//Order order = await dapr.GetStateAsync<Order>(StateStoreName, orderCompletedEvent.OrderId);
+			//User user = await dapr.GetStateAsync<User>(StateStoreName, orderCompletedEvent.Username);
+
+			HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+
+			HttpClient ordersHttpClient = DaprClient.CreateInvokeHttpClient("orders-api");
+			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?productId={orderCompletedEvent.OrderId}");
+
+			HttpClient usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+			User? user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={orderCompletedEvent.Username}");
+			
+			if (order is null || user is null)
+			{
+				Console.WriteLine("Missing user or order details!");
+				return await Task.FromResult(Results.BadRequest());
+			}
 
 			var body = $$"""
 			<h1>Your order has been completed</h1>"
 			<br>
-			<p>Order Status: {{ order.Status}}</p>
+			<p>Order Status: {{ order?.Status ?? OrderStatus.OrderForgotten }}</p>
 			<ul>
 			""";
 
 			decimal total = 0;
 			foreach(var item in order.Items)
 			{
-				Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
+				//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
+				Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
 
 				body += $$"""
 				<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}"</li>
@@ -53,11 +69,12 @@ public static class NotificationsEndpoints
 			<p>Total (incl GST): ${{total:F2}}</p>
 			<p>Thanks</p>
 			""";
-
+			
+			Console.WriteLine($"Sending order completed email to: {user.Email}");
 			var email = new EmailModel(
 				From: "awliebenberg@outlook.com",
 				To: user.Email,
-				Subject: "Your order has been completed",
+				Subject: "Your DaprShop order has been completed!",
 				CC: "awliebenberg@outlook.com",
 				BCC: null!,
 				Body: body);
