@@ -7,6 +7,10 @@ param registryUsername string
 @secure()
 param registryPassword string
 
+@secure()
+@description('The Application Insights Instrumentation Key.')
+param appInsightsInstrumentationKey string
+
 resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'cart-api'
   location: location
@@ -30,6 +34,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
             }
+            {
+              name: 'ApplicationInsights__InstrumentationKey'
+              value: appInsightsInstrumentationKey
+            }
           ]
         }
       ]
@@ -43,6 +51,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
         {
           name: 'containerregistrypasswordref'
           value: registryPassword
+        }
+        {
+          name: 'appinsights-key'
+          value: appInsightsInstrumentationKey
         }
       ]
       registries: [
@@ -62,7 +74,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: false
         targetPort: 80
-        allowInsecure: true
+        allowInsecure: false
       }
     }
   }

@@ -6,6 +6,9 @@ param registryUsername string
 @secure()
 param registryPassword string
 
+@secure()
+param sendgridApiKey string
+
 param uniqueSeed string = '${take(uniqueString(resourceGroup().id, deployment().name), 6)}-${envName}'
 
 // --------------------------------------------------------------------------
@@ -86,9 +89,34 @@ module daprSecretStore 'modules/dapr/secret-store.bicep' = {
   }
 }
 
+module daprSendgrid 'modules/dapr/sendgrid.bicep' = {
+  name: '${deployment().name}-dapr-sendgrid'
+  params: {
+    containerAppsEnvironmentName: containerAppsEnvironment.outputs.name
+    sendgridApiKey: sendgridApiKey
+  }
+}
+
 // --------------------------------------------------------------------------
 // Container apps
 // --------------------------------------------------------------------------
+
+module notificationsApi 'modules/apps/notifications-api.bicep' = {
+  name: '${deployment().name}-app-notifications-api'
+  dependsOn: [
+    daprPubSub
+    daprSendgrid
+  ]
+  params: {
+    location: location
+    containerAppsEnvironmentId: containerAppsEnvironment.outputs.id
+    managedIdentityId: managedIdentity.outputs.identityId
+    registry: registry
+    registryUsername: registryUsername
+    registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
+  }
+}
 
 module usersApi 'modules/apps/users-api.bicep' = {
   name: '${deployment().name}-app-users-api'
@@ -103,9 +131,9 @@ module usersApi 'modules/apps/users-api.bicep' = {
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
   }
 }
-
 
 module cartApi 'modules/apps/cart-api.bicep' = {
   name: '${deployment().name}-app-cart-api'
@@ -120,9 +148,9 @@ module cartApi 'modules/apps/cart-api.bicep' = {
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
   }
 }
-
 
 module productsApi 'modules/apps/products-api.bicep' = {
   name: '${deployment().name}-app-products-api'
@@ -137,6 +165,7 @@ module productsApi 'modules/apps/products-api.bicep' = {
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
   }
 }
 
@@ -153,9 +182,9 @@ module ordersApi 'modules/apps/orders-api.bicep' = {
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
   }
 }
-
 
 module gatewayApi 'modules/apps/gateway-api.bicep' = {
   name: '${deployment().name}-app-gateway-api'
@@ -171,10 +200,12 @@ module gatewayApi 'modules/apps/gateway-api.bicep' = {
     registry: registry
     registryUsername: registryUsername
     registryPassword: registryPassword
+    appInsightsInstrumentationKey: containerAppsEnvironment.outputs.appInsightsKey
 
     cartApiFqdn: cartApi.outputs.fqdn
     productsApiFqdn: productsApi.outputs.fqdn
     ordersApiFqdn: ordersApi.outputs.fqdn
     usersApiFqdn: usersApi.outputs.fqdn
+    notificationsApiFqdn: notificationsApi.outputs.fqdn
   }
 }

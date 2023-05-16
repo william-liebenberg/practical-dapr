@@ -117,19 +117,6 @@
           }
         }
       }
-    },
-    "/products/notify": {
-      "post": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Notify",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
     }
   },
   "components": {}

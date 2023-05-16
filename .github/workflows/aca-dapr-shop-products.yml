@@ -38,7 +38,6 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
-        include-prerelease: false
         global-json-file: global.json
 
     - name: Log in to container registry

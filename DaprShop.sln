@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43E
 		.editorconfig = .editorconfig
 		my-secrets.json = my-secrets.json
 		readme.md = readme.md
+		.github\workflows\run-workflows.ps1 = .github\workflows\run-workflows.ps1
 		start-dapr-sidecars.cmd = start-dapr-sidecars.cmd
 	EndProjectSection
 EndProject
@@ -27,8 +28,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr-components", "dapr-components", "{C6EAA860-164F-40B6-812E-5D31CC229960}"
 	ProjectSection(SolutionItems) = preProject
 		components\pubsub.yaml = components\pubsub.yaml
+		components\secrets.yaml = components\secrets.yaml
+		components\sendgrid.yml = components\sendgrid.yml
 		components\statestore.yaml = components\statestore.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaprShop.Notifications.API", "DaprShop.Notifications.API\DaprShop.Notifications.API.csproj", "{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +69,10 @@ Global
 		{798FCF58-A88D-41A7-B238-39E79EF95F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{798FCF58-A88D-41A7-B238-39E79EF95F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{798FCF58-A88D-41A7-B238-39E79EF95F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

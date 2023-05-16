@@ -28,9 +28,9 @@ public static class OrderEndpoints
 			//.WithOpenApi()
 			.WithName("GetOrdersForUser");
 
-		orders.MapPost("submit", async ([FromBody] Order order, [FromServices] OrderService orderService) =>
+		orders.MapPost("submit", async ([FromBody] Order order, [FromServices] OrderService orderService, CancellationToken cancellationToken) =>
 		{
-			await orderService.ProcessOrder(order);
+			await orderService.ProcessOrder(order, cancellationToken);
 			return Results.Ok();
 		})
 			.WithTopic("daprshop-pubsub", "daprshop.orders.queue")

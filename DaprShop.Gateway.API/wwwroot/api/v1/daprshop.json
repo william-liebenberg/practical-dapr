@@ -1,6 +1,20 @@
 {
   "components": {
     "schemas": {
+      "OrderCompletedEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "Order": {
         "type": "object",
         "additionalProperties": false,
@@ -181,6 +195,32 @@
         }
       }
     },
+    "/notifications/submit": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ReceiveCompletedOrder",
+        "requestBody": {
+          "x-name": "orderCompletedEvent",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCompletedEvent"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/orders/get": {
       "get": {
         "tags": [
@@ -288,19 +328,6 @@
             "x-position": 1
           }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/products/notify": {
-      "post": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Notify",
         "responses": {
           "200": {
             "description": ""

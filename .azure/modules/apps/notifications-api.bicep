@@ -12,7 +12,7 @@ param registryPassword string
 param appInsightsInstrumentationKey string
 
 resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
-  name: 'orders-api'
+  name: 'notifications-api'
   location: location
   identity: {
     type: 'UserAssigned'
@@ -26,8 +26,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
     template: {
       containers: [
         {
-          name: 'orders-api'
-          //image: 'acadaprshop.azurecr.io/daprshop-orders-api'
+          name: 'notifications-api'
+          //image: 'acadaprshop.azurecr.io/daprshop-usermanagement-api'
           image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
           env: [
             {
@@ -64,7 +64,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
       activeRevisionsMode: 'single'
       dapr: {
         enabled: true
-        appId: 'orders-api'
+        appId: 'notifications-api'
         appPort: 80
       }
       ingress: {

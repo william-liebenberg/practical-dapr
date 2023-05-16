@@ -7,10 +7,15 @@ param registryUsername string
 @secure()
 param registryPassword string
 
+@secure()
+@description('The Application Insights Instrumentation Key.')
+param appInsightsInstrumentationKey string
+
 param cartApiFqdn string
 param productsApiFqdn string
 param ordersApiFqdn string
 param usersApiFqdn string
+param notificationsApiFqdn string
 
 resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'gateway-api'
@@ -35,20 +40,28 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
               value: 'Production'
             }
             {
+              name: 'ApplicationInsights__InstrumentationKey'
+              value: appInsightsInstrumentationKey
+            }
+            {
               name: 'ApiRoutes__0__HostUrl'
-              value: 'http://${cartApiFqdn}'
+              value: 'https://${cartApiFqdn}'
             }
             {
               name: 'ApiRoutes__1__HostUrl'
-              value: 'http://${productsApiFqdn}'
+              value: 'https://${productsApiFqdn}'
             }
             {
               name: 'ApiRoutes__2__HostUrl'
-              value: 'http://${ordersApiFqdn}'
+              value: 'https://${ordersApiFqdn}'
             }
             {
               name: 'ApiRoutes__3__HostUrl'
-              value: 'http://${usersApiFqdn}'
+              value: 'https://${usersApiFqdn}'
+            }
+            {
+              name: 'ApiRoutes__4__HostUrl'
+              value: 'https://${notificationsApiFqdn}'
             }
           ]
         }

@@ -86,6 +86,7 @@ public class CartService
 			};
 
 			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemAddedToCartEvent);
+
 		}
 		catch (DaprException dx)
 		{

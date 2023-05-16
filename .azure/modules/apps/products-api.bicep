@@ -7,6 +7,10 @@ param registryUsername string
 @secure()
 param registryPassword string
 
+@secure()
+@description('The Application Insights Instrumentation Key.')
+param appInsightsInstrumentationKey string
+
 resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
   name: 'products-api'
   location: location
@@ -29,6 +33,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
+            }
+            {
+              name: 'ApplicationInsights__InstrumentationKey'
+              value: appInsightsInstrumentationKey
             }
           ]
         }
@@ -62,7 +70,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
       ingress: {
         external: true
         targetPort: 80
-        allowInsecure: true
+        allowInsecure: false
       }
     }
   }

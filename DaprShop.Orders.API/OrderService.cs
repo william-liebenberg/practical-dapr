@@ -1,4 +1,6 @@
-﻿using Dapr;
+﻿using System.Threading;
+
+using Dapr;
 using Dapr.Client;
 
 using DaprShop.Contracts.Entities;
@@ -14,6 +16,7 @@ public class OrderService
 	private readonly string _storeName = "daprshop-statestore";
 	private readonly string _pubsubName = "daprshop-pubsub";
 	private readonly string _orderStatusTopic = "daprshop.orders.status";
+	private readonly string _orderCompletedTopic = "daprshop.orders.completed";
 
 	public OrderService(
 		ILogger<OrderService> logger,
@@ -107,7 +110,7 @@ public class OrderService
 		}
 	}
 
-	public async Task SetStatus(Order order, OrderStatus newStatus)
+	public async Task SetStatus(Order order, OrderStatus newStatus, CancellationToken cancellationToken)
 	{
 		_logger.LogInformation("Progressing order {orderId} from {currentOrderStatus} to {newOrderStatus}", order.OrderId, order.Status, newStatus);
 
@@ -115,7 +118,7 @@ public class OrderService
 
 		try
 		{
-			await _dapr.SaveStateAsync(_storeName, updatedOrder.OrderId, updatedOrder);
+			await _dapr.SaveStateAsync(_storeName, updatedOrder.OrderId, updatedOrder, cancellationToken: cancellationToken);
 
 			OrderStatusChanged statusChangedEvent = new()
 			{
@@ -124,7 +127,7 @@ public class OrderService
 				PreviousStatus = order.Status
 			};
 
-			await _dapr.PublishEventAsync(_pubsubName, _orderStatusTopic, statusChangedEvent);
+			await _dapr.PublishEventAsync(_pubsubName, _orderStatusTopic, statusChangedEvent, cancellationToken: cancellationToken);
 		}
 		catch (DaprException dx)
 		{
@@ -133,7 +136,7 @@ public class OrderService
 		}
 	}
 
-	public async Task ProcessOrder(Order order)
+	public async Task ProcessOrder(Order order, CancellationToken cancellationToken)
 	{
 		_logger.LogInformation("=== Processing order: {orderId}", order.OrderId);
 
@@ -144,16 +147,12 @@ public class OrderService
 		}
 
 		_logger.LogInformation("Processing order: {orderId} - Saving new Order", order.OrderId);
+
 		// save the new order
 		await AddOrder(order);
 
-		_logger.LogInformation("Processing order: {orderId} - Setting Status to {newStatus}", order.OrderId, OrderStatus.OrderReceived);
 		// set status to OrderReceived
-		await SetStatus(order, OrderStatus.OrderReceived);
-
-		// save Order slip...
-		//_logger.LogInformation("Processing order: {orderId} - Saving order slip", order.OrderId);
-		//await SaveOrderSlip(order);
+		await SetStatus(order, OrderStatus.OrderReceived, cancellationToken);
 
 		// do some fake background processing
 		var originalOrderId = order.OrderId;
@@ -163,7 +162,7 @@ public class OrderService
 		{
 			await Task.Delay(TimeSpan.FromSeconds(10), token);
 			var originalOrder = await GetOrder(originalOrderId);
-			await SetStatus(originalOrder, OrderStatus.OrderProcessing);
+			await SetStatus(originalOrder, OrderStatus.OrderProcessing, token);
 		});
 
 		// after 60 seconds, set status to OrderComplete
@@ -171,14 +170,20 @@ public class OrderService
 		{
 			await Task.Delay(TimeSpan.FromSeconds(10), token);
 			var originalOrder = await GetOrder(originalOrderId);
-			await SetStatus(originalOrder, OrderStatus.OrderComplete);
+			await SetStatus(originalOrder, OrderStatus.OrderComplete, token);
 		});
 
 		// publish the OrderComplete event
 		// then, delivery/notification service can pick it up and take it to user
+		_backgroundWorkerQueue.QueueBackgroundWorkItem(async token =>
+		{
+			var originalOrder = await GetOrder(originalOrderId);
+
+			if (originalOrder.Status == OrderStatus.OrderComplete)
+			{
+				OrderCompletedEvent orderCompletedEvent = new(order.Username, originalOrder.OrderId);
+				await _dapr.PublishEventAsync(_pubsubName, _orderStatusTopic, orderCompletedEvent, token);
+			}
+		});
 	}
-
-	//public async Task EmailNotify(Order order) { }
-
-	//public async Task SaveReport(Order order) { } 
 }
