@@ -30,11 +30,16 @@ public static class NotificationsEndpoints
 			//User user = await dapr.GetStateAsync<User>(StateStoreName, orderCompletedEvent.Username);
 
 			HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+			productsHttpClient.BaseAddress = new Uri("https://products-api");
 
 			HttpClient ordersHttpClient = DaprClient.CreateInvokeHttpClient("orders-api");
+			ordersHttpClient.BaseAddress = new Uri("https://orders-api");
+
 			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?productId={orderCompletedEvent.OrderId}");
 
 			HttpClient usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+			usersHttpClient.BaseAddress = new Uri("https://users-api");
+
 			User? user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={orderCompletedEvent.Username}");
 			
 			if (order is null || user is null)
