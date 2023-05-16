@@ -7,7 +7,7 @@
     "version": "v1"
   },
   "paths": {
-    "/notifications/submit": {
+    "/notifications/OrderCompleted": {
       "post": {
         "tags": [
           "Notifications"
@@ -19,7 +19,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderCompletedEvent"
+                "$ref": "#/components/schemas/OrderCompleted"
               }
             }
           },
@@ -36,7 +36,7 @@
   },
   "components": {
     "schemas": {
-      "OrderCompletedEvent": {
+      "OrderCompleted": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

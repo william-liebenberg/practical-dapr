@@ -181,7 +181,7 @@ public class OrderService
 
 			if (originalOrder.Status == OrderStatus.OrderComplete)
 			{
-				OrderCompletedEvent orderCompletedEvent = new(order.Username, originalOrder.OrderId);
+				OrderCompleted orderCompletedEvent = new(order.Username, originalOrder.OrderId);
 				await _dapr.PublishEventAsync(_pubsubName, _orderCompletedTopic, orderCompletedEvent, token);
 			}
 		});

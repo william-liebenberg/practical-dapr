@@ -28,6 +28,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         'cart-api'
         'products-api'
         'orders-api'
+        'notifications-api'
       ]
     }
   }

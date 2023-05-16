@@ -6,6 +6,7 @@ namespace DaprShop.Notifications.API;
 
 public static class NotificationsEndpoints
 {
+	private static readonly string PubSubName = "daprshop-pubsub";
 	private static readonly string OrderCompletedTopic = "daprshop.orders.completed";
 
 	public static void MapNotificationsEndpoints(this IEndpointRouteBuilder builder)
@@ -14,12 +15,12 @@ public static class NotificationsEndpoints
 			.MapGroup("notifications")
 			.WithTags(new[] { "Notifications" });
 
-		notifications.MapPost("submit", async ([FromBody] OrderCompletedEvent orderCompletedEvent) =>
+		notifications.MapPost("OrderCompleted", async ([FromBody] OrderCompleted orderCompletedEvent) =>
 		{
-			Console.WriteLine("Received OrderCompleted: {orderId} for {username}", orderCompletedEvent.OrderId, orderCompletedEvent.Username);
+			Console.WriteLine($"Received OrderCompleted: {orderCompletedEvent.OrderId} for {orderCompletedEvent.Username}");
 			return await Task.FromResult(Results.Ok());
 		})
-			.WithTopic("daprshop-pubsub", OrderCompletedTopic)
+			.WithTopic(PubSubName, OrderCompletedTopic)
 			.WithName("ReceiveCompletedOrder");
 	}
 }
