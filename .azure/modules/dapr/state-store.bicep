@@ -50,6 +50,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01'
         'users-api'
         'products-api'
         'orders-api'
+        'notifications-api'
       ]
     }
   }

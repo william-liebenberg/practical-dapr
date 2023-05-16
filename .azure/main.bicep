@@ -105,6 +105,7 @@ module notificationsApi 'modules/apps/notifications-api.bicep' = {
   name: '${deployment().name}-app-notifications-api'
   dependsOn: [
     daprPubSub
+    daprStateStore
     daprSendgrid
   ]
   params: {
