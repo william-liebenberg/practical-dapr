@@ -52,18 +52,24 @@ public static class NotificationsEndpoints
 			""";
 
 			decimal total = 0;
-			foreach(var item in order.Items)
+
+			if(order is not null)
 			{
-				//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
-				Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
+				foreach (var item in order.Items)
+				{
+					//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
+					Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
+					if (product is not null)
+					{
+						body += $$"""
+						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}"</li>
+						""";
 
-				body += $$"""
-				<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}"</li>
-				""";
-
-				total += item.Quantity * product.UnitPrice;
+						total += item.Quantity * product.UnitPrice;
+					}
+				}
 			}
-
+			
 			body += $$"""
 			</ul>
 			<p>Total (incl GST): ${{total:F2}}</p>
