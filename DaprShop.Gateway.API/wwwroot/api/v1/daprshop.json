@@ -1,7 +1,7 @@
 {
   "components": {
     "schemas": {
-      "OrderCompletedEvent": {
+      "OrderCompleted": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -60,6 +60,7 @@
         "type": "integer",
         "description": "",
         "x-enumNames": [
+          "OrderForgotten",
           "OrderNew",
           "OrderReceived",
           "OrderProcessing",
@@ -69,7 +70,8 @@
           0,
           1,
           2,
-          3
+          3,
+          4
         ]
       },
       "AddProductItemToCart": {
@@ -207,7 +209,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderCompletedEvent"
+                "$ref": "#/components/schemas/OrderCompleted"
               }
             }
           },

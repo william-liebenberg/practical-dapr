@@ -29,13 +29,10 @@ public static class NotificationsEndpoints
 			//Order order = await dapr.GetStateAsync<Order>(StateStoreName, orderCompletedEvent.OrderId);
 			//User user = await dapr.GetStateAsync<User>(StateStoreName, orderCompletedEvent.Username);
 
-			HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
-			productsHttpClient.BaseAddress = new Uri("https://products-api");
-
 			HttpClient ordersHttpClient = DaprClient.CreateInvokeHttpClient("orders-api");
 			ordersHttpClient.BaseAddress = new Uri("https://orders-api");
 
-			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?productId={orderCompletedEvent.OrderId}");
+			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?orderId={orderCompletedEvent.OrderId}");
 
 			HttpClient usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
 			usersHttpClient.BaseAddress = new Uri("https://users-api");
@@ -49,7 +46,8 @@ public static class NotificationsEndpoints
 			}
 
 			var body = $$"""
-			<h1>Your order has been completed</h1>"
+			<h1>Hi {{user.DisplayName}}</h1>
+			<h2>Your order has been completed</h2>
 			<br>
 			<p>Order Status: {{ order?.Status ?? OrderStatus.OrderForgotten }}</p>
 			<ul>
@@ -59,6 +57,9 @@ public static class NotificationsEndpoints
 
 			if(order is not null)
 			{
+				HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+				productsHttpClient.BaseAddress = new Uri("https://products-api");
+
 				foreach (var item in order.Items)
 				{
 					//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
@@ -66,7 +67,7 @@ public static class NotificationsEndpoints
 					if (product is not null)
 					{
 						body += $$"""
-						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}"</li>
+						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}</li>
 						""";
 
 						total += item.Quantity * product.UnitPrice;
