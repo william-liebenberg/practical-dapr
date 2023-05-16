@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 
-// TODO: Add Email service
+builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
