@@ -9,7 +9,6 @@ namespace DaprShop.Notifications.API;
 
 public static class NotificationsEndpoints
 {
-	private static readonly string StateStoreName = "daprshop-statestore";
 	private static readonly string PubSubName = "daprshop-pubsub";
 	private static readonly string OrderCompletedTopic = "daprshop.orders.completed";
 
