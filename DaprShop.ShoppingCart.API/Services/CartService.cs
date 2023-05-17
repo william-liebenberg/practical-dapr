@@ -1,8 +1,9 @@
-using Dapr;
 using Dapr.Client;
 
 using DaprShop.Contracts.Entities;
 using DaprShop.Contracts.Events;
+
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace DaprShop.Shopping.API.Services;
 
@@ -43,7 +44,7 @@ public class CartService
 		if (user == null)
 		{
 			_logger.LogInformation("Could not retrieve user {username} from User Service", username);
-			throw new ProductNotFoundException(productId);
+			throw new Exception($"User not found: {username}");
 		}
 		else
 		{
@@ -65,34 +66,18 @@ public class CartService
 			cart.AddItem(new CartItem(product.ProductId, product.Name, product.UnitPrice, quantity));
 		}
 
-		try
-		{
-			// save/update the cart
-			await _dapr.SaveStateAsync(_storeName, username, cart);
-		}
-		catch (DaprException dx)
-		{
-			_logger.LogError(dx, "Couldn't save cart state for user: {username}", username);
-			throw;
-		}
+		
+		// save/update the cart
+		await _dapr.SaveStateAsync(_storeName, username, cart);
 
-		try
+		// publish the event
+		ProductItemAddedToCart itemAddedToCartEvent = new()
 		{
-			// publish the event
-			ProductItemAddedToCart itemAddedToCartEvent = new()
-			{
-				Username = username,
-				ProductId = productId
-			};
+			Username = username,
+			ProductId = productId
+		};
 
-			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemAddedToCartEvent);
-
-		}
-		catch (DaprException dx)
-		{
-			_logger.LogError(dx, "Couldn't publish event for product: {productId}", productId);
-			throw;
-		}
+		await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemAddedToCartEvent);
 	}
 
 	public async Task<bool> RemoveItemFromShoppingCart(string username, string productId, int quantity)
@@ -100,37 +85,21 @@ public class CartService
 		Cart cart = await GetCart(username);
 		if (cart.RemoveCartItem(productId))
 		{
-			try
-			{
-				var itemRemoved = new ProductItemRemovedFromCart() { ProductId = productId };
-				await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemRemoved);
-				return true;
-			}
-			catch (DaprException dx)
-			{
-				_logger.LogError(dx, "Couldn't publish event for removing product from cart: {productId}", productId);
-				throw;
-			}
+			var itemRemoved = new ProductItemRemovedFromCart() { ProductId = productId };
+			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemRemoved);
+			return true;
 		}
 		return false;
 	}
 
 	public async Task<Cart> GetCart(string username)
 	{
-		try
+		var cart = await _dapr.GetStateAsync<Cart>(_storeName, username);
+		cart ??= new Cart()
 		{
-			var cart = await _dapr.GetStateAsync<Cart>(_storeName, username);
-			cart ??= new Cart()
-			{
-				Username = username
-			};
-			return cart;
-		}
-		catch (DaprException dx)
-		{
-			_logger.LogError(dx, "Could not get cart state for user: {username}", username);
-			throw;
-		}
+			Username = username
+		};
+		return cart;
 	}
 
 	// submit an order by collecting everything in the basket, creating an order item, and publishing it onto the bus
@@ -139,12 +108,13 @@ public class CartService
 		Cart? cart = await GetCart(username);
 		if (cart is null || cart.IsEmpty())
 		{
+			_logger.LogInformation("User {username} tried to submit an empty cart!", username);
 			return null;
 		}
 
 		var order = new Order
 			(
-				Status: OrderStatus.OrderNew, // TODO: Do we really need to say its a new order when submitting a new order?
+				Status: OrderStatus.OrderNew,
 				OrderId: Guid.NewGuid().ToString(),
 				Username: username,
 				Title: $"Order {DateTime.Now.ToShortDateString()}",
@@ -156,6 +126,7 @@ public class CartService
 		// put the new order into the queue
 		await _dapr.PublishEventAsync(_pubsubName, _ordersQueueTopic, order);
 
+		// clear the users cart (so they can fill it up again)
 		await ClearCart(username);
 
 		return order;
@@ -163,15 +134,7 @@ public class CartService
 
 	public async Task ClearCart(string username)
 	{
-		try
-		{
-			await _dapr.DeleteStateAsync(_storeName, username);
-			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, new CartCleared() { Username = username });
-		}
-		catch (DaprException dx)
-		{
-			_logger.LogError(dx, "Could clear the cart for user: {username}", username);
-			throw;
-		}
+		await _dapr.DeleteStateAsync(_storeName, username);
+		await _dapr.PublishEventAsync(_pubsubName, _cartTopic, new CartCleared() { Username = username });
 	}
 }
