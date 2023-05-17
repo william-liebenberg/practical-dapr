@@ -1,7 +1,7 @@
 {
   "components": {
     "schemas": {
-      "OrderCompletedEvent": {
+      "OrderCompleted": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -207,7 +207,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderCompletedEvent"
+                "$ref": "#/components/schemas/OrderCompleted"
               }
             }
           },
