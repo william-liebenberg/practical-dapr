@@ -10,7 +10,6 @@ public static class ShoppingCartEndpoints
 	public static IEndpointRouteBuilder MapShoppingCartRoutes(this IEndpointRouteBuilder builder)
 	{
 		var cartRoutes = builder
-			//.WithOpenApi()
 			.MapGroup("cart")
 			.WithTags(new[] { "Cart" });
 
@@ -26,8 +25,7 @@ public static class ShoppingCartEndpoints
 				return Results.BadRequest(ex);
 			}
 		})
-			//.WithOpenApi()
-			.WithName("GetCart"); ;
+		.WithName("GetCart"); ;
 
 		cartRoutes.MapPost("items", async ([FromBody] AddProductItemToCart item, [FromServices] CartService cartService) =>
 		{
@@ -41,8 +39,7 @@ public static class ShoppingCartEndpoints
 				return Results.BadRequest(ex);
 			}
 		})
-			//.WithOpenApi()
-			.WithName("AddItem"); ;
+		.WithName("AddItem"); ;
 
 		cartRoutes.MapPost("submit", async ([FromBody] SubmitCartRequest req, [FromServices] CartService cartService) =>
 		{
@@ -56,8 +53,7 @@ public static class ShoppingCartEndpoints
 				return Results.BadRequest(ex);
 			}
 		})
-			//.WithOpenApi()
-			.WithName("SubmitOrder");
+		.WithName("SubmitOrder");
 
 
 
@@ -70,36 +66,32 @@ public static class ShoppingCartEndpoints
 			Console.WriteLine($"---===> Item [{@event.ProductId}] added to [{@event.Username}]'s cart.");
 			return Results.Ok();
 		})
-			.WithTopic(pubsubName, cartTopic)
-			//.WithOpenApi()
-			.WithName("ItemAdded");
+		.WithTopic(pubsubName, cartTopic)
+		.WithName("ItemAdded");
 
 		cartRoutes.MapPost("removed", ([FromBody] ProductItemRemovedFromCart @event) =>
 		{
 			Console.WriteLine($"---===> Item [{@event.ProductId}] removed from [{@event.Username}]'s cart.");
 			return Results.Ok();
 		})
-			.WithTopic(pubsubName, cartTopic)
-			//.WithOpenApi()
-			.WithName("ItemRemoved");
+		.WithTopic(pubsubName, cartTopic)
+		.WithName("ItemRemoved");
 
 		cartRoutes.MapPost("cleared", ([FromBody] CartCleared @event) =>
 		{
 			Console.WriteLine($"---===> Cleared cart for [{@event.Username}]");
 			return Results.Ok();
 		})
-			.WithTopic(pubsubName, cartTopic)
-			//.WithOpenApi()
-			.WithName("Cleared");
+		.WithTopic(pubsubName, cartTopic)
+		.WithName("Cleared");
 
 		cartRoutes.MapPost("StatusChanged", ([FromBody] OrderStatusChanged @event) =>
 		{
 			Console.WriteLine($"---===> Order [{@event.OrderId}] statuc changed from [{@event.PreviousStatus}] to [{@event.CurrentStatus}]");
 			return Results.Ok();
 		})
-			.WithTopic(pubsubName, cartTopic)
-			//.WithOpenApi()
-			.WithName("StatusChanged");
+		.WithTopic(pubsubName, cartTopic)
+		.WithName("StatusChanged");
 
 		return builder;
 	}
