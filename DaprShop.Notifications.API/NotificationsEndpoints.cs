@@ -32,56 +32,22 @@ public static class NotificationsEndpoints
 			HttpClient ordersHttpClient = DaprClient.CreateInvokeHttpClient("orders-api");
 			ordersHttpClient.BaseAddress = new Uri("https://orders-api");
 
-			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?orderId={orderCompletedEvent.OrderId}");
-
 			HttpClient usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
 			usersHttpClient.BaseAddress = new Uri("https://users-api");
 
+			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?orderId={orderCompletedEvent.OrderId}");
 			User? user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={orderCompletedEvent.Username}");
-			
+
 			if (order is null || user is null)
 			{
 				Console.WriteLine("Missing user or order details!");
 				return await Task.FromResult(Results.BadRequest());
 			}
 
-			var body = $$"""
-			<h1>Hi {{user.DisplayName}}</h1>
-			<h2>Your order has been completed</h2>
-			<br>
-			<p>Order Status: {{ order?.Status ?? OrderStatus.OrderForgotten }}</p>
-			<ul>
-			""";
+			string body = await GenerateEmail(order, user);
 
-			decimal total = 0;
-
-			if(order is not null)
-			{
-				HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
-				productsHttpClient.BaseAddress = new Uri("https://products-api");
-
-				foreach (var item in order.Items)
-				{
-					//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
-					Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
-					if (product is not null)
-					{
-						body += $$"""
-						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}</li>
-						""";
-
-						total += item.Quantity * product.UnitPrice;
-					}
-				}
-			}
-			
-			body += $$"""
-			</ul>
-			<p>Total (incl GST): ${{total:F2}}</p>
-			<p>Thanks</p>
-			""";
-			
 			Console.WriteLine($"Sending order completed email to: {user.Email}");
+
 			var email = new EmailModel(
 				From: "awliebenberg@outlook.com",
 				To: user.Email,
@@ -96,5 +62,45 @@ public static class NotificationsEndpoints
 		})
 			.WithTopic(PubSubName, OrderCompletedTopic)
 			.WithName("ReceiveCompletedOrder");
+	}
+
+	private static async Task<string> GenerateEmail(Order? order, User? user)
+	{
+		var body = $$"""
+			<h1>Hi {{user?.DisplayName ?? "Anonymous"}}</h1>
+			<h2>Your order has been completed</h2>
+			<br>
+			<p>Order Status: {{order?.Status ?? OrderStatus.OrderForgotten}}</p>
+			<ul>
+			""";
+
+		decimal total = 0;
+
+		if (order is not null)
+		{
+			HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+			productsHttpClient.BaseAddress = new Uri("https://products-api");
+
+			foreach (var item in order.Items)
+			{
+				//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
+				Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
+				if (product is not null)
+				{
+					body += $$"""
+						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}</li>
+						""";
+
+					total += item.Quantity * product.UnitPrice;
+				}
+			}
+		}
+
+		body += $$"""
+			</ul>
+			<p>Total (incl GST): ${{total:F2}}</p>
+			<p>Thanks</p>
+			""";
+		return body;
 	}
 }

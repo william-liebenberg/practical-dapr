@@ -1,13 +1,12 @@
 using DaprShop.Notifications.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 
-// TODO Add Email Service
+builder.Services.AddSingleton<EmailService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.Configure<TelemetryConfiguration>((o) => {
