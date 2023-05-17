@@ -1,7 +1,7 @@
 ﻿using DaprShop.Contracts.Entities;
-using DaprShop.UserManagement.API;
-
 using Microsoft.AspNetCore.Mvc;
+
+namespace DaprShop.UserManagement.API;
 
 public static class UserManagementEndpoints
 {
