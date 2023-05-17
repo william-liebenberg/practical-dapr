@@ -9,7 +9,7 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.Configure<TelemetryConfiguration>((o) => {
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("user-management-api"));
+	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("users-api"));
 });
 
 builder.Services.AddEndpointsApiExplorer();
