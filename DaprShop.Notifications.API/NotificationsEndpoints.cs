@@ -52,13 +52,13 @@ public static class NotificationsEndpoints
 				From: "awliebenberg@outlook.com",
 				To: user.Email,
 				Subject: "Your DaprShop order has been completed!",
-				CC: "awliebenberg@outlook.com",
+				CC: "wizzy121@iinet.net.au",
 				BCC: null!,
 				Body: body);
 
 			await emailService.SendEmail(email);
 
-			return await Task.FromResult(Results.Ok());
+			return Results.Ok();
 		})
 			.WithTopic(PubSubName, OrderCompletedTopic)
 			.WithName("ReceiveCompletedOrder");
