@@ -1,4 +1,7 @@
-﻿using DaprShop.Contracts.Events;
+﻿using Dapr.Client;
+
+using DaprShop.Contracts.Entities;
+using DaprShop.Contracts.Events;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +18,89 @@ public static class NotificationsEndpoints
 			.MapGroup("notifications")
 			.WithTags(new[] { "Notifications" });
 
-		notifications.MapPost("OrderCompleted", async ([FromBody] OrderCompleted orderCompletedEvent) =>
+		notifications.MapPost("OrderCompleted", async (
+			[FromBody] OrderCompleted orderCompletedEvent,
+			[FromServices]EmailService emailService,
+			[FromServices] DaprClient dapr) =>
 		{
 			Console.WriteLine($"Received OrderCompleted: {orderCompletedEvent.OrderId} for {orderCompletedEvent.Username}");
-			return await Task.FromResult(Results.Ok());
+
+			// Can't call directly into the state store of other services... the key is prefixed with the owner's appid
+			//Order order = await dapr.GetStateAsync<Order>(StateStoreName, orderCompletedEvent.OrderId);
+			//User user = await dapr.GetStateAsync<User>(StateStoreName, orderCompletedEvent.Username);
+
+			HttpClient ordersHttpClient = DaprClient.CreateInvokeHttpClient("orders-api");
+			ordersHttpClient.BaseAddress = new Uri("https://orders-api");
+
+			HttpClient usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+			usersHttpClient.BaseAddress = new Uri("https://users-api");
+
+			Order? order = await ordersHttpClient.GetFromJsonAsync<Order>($"orders/get?orderId={orderCompletedEvent.OrderId}");
+			User? user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={orderCompletedEvent.Username}");
+
+			if (order is null || user is null)
+			{
+				Console.WriteLine("Missing user or order details!");
+				return await Task.FromResult(Results.BadRequest());
+			}
+
+			string body = await GenerateEmail(order, user);
+
+			Console.WriteLine($"Sending order completed email to: {user.Email}");
+
+			var email = new EmailModel(
+				From: "awliebenberg@outlook.com",
+				To: user.Email,
+				Subject: "Your DaprShop order has been completed!",
+				CC: "wizzy121@iinet.net.au",
+				BCC: null!,
+				Body: body);
+
+			await emailService.SendEmail(email);
+
+			return Results.Ok();
 		})
 			.WithTopic(PubSubName, OrderCompletedTopic)
 			.WithName("ReceiveCompletedOrder");
+	}
+
+	private static async Task<string> GenerateEmail(Order? order, User? user)
+	{
+		var body = $$"""
+			<h1>Hi {{user?.DisplayName ?? "Anonymous"}}</h1>
+			<h2>Your order has been completed</h2>
+			<br>
+			<p>Order Status: {{order?.Status ?? OrderStatus.OrderForgotten}}</p>
+			<ul>
+			""";
+
+		decimal total = 0;
+
+		if (order is not null)
+		{
+			HttpClient productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+			productsHttpClient.BaseAddress = new Uri("https://products-api");
+
+			foreach (var item in order.Items)
+			{
+				//Product product = await dapr.GetStateAsync<Product>(StateStoreName, item.ProductId);
+				Product? product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={item.ProductId}");
+				if (product is not null)
+				{
+					body += $$"""
+						<li>{{item.Quantity}}x {{product.Name}} - ${{product.UnitPrice:F2}}</li>
+						""";
+
+					total += item.Quantity * product.UnitPrice;
+				}
+			}
+		}
+
+		body += $$"""
+			</ul>
+			<p>Total (incl GST): ${{total:F2}}</p>
+			<p>Thanks</p>
+			""";
+		return body;
 	}
 }

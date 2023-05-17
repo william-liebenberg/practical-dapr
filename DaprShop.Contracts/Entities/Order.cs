@@ -2,6 +2,7 @@
 
 public enum OrderStatus
 {
+	OrderForgotten,
 	OrderNew,
 	OrderReceived,
 	OrderProcessing,

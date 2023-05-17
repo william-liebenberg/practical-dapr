@@ -131,6 +131,7 @@
         "type": "integer",
         "description": "",
         "x-enumNames": [
+          "OrderForgotten",
           "OrderNew",
           "OrderReceived",
           "OrderProcessing",
@@ -140,7 +141,8 @@
           0,
           1,
           2,
-          3
+          3,
+          4
         ]
       }
     }
