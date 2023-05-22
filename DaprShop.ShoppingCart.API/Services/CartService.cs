@@ -64,7 +64,7 @@ public class CartService
 			cart.AddItem(new CartItem(product.ProductId, product.Name, product.UnitPrice, quantity));
 		}
 
-		
+
 		// save/update the cart
 		await _dapr.SaveStateAsync(_storeName, username, cart);
 

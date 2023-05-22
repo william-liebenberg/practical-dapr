@@ -10,7 +10,8 @@ builder.Services.AddDaprClient();
 // TODO: Add Email service
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) => {
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
 	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("notifications-api"));
 });
 

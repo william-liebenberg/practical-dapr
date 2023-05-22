@@ -1,4 +1,5 @@
 ﻿using DaprShop.Contracts.Entities;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaprShop.UserManagement.API;

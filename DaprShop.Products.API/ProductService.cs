@@ -92,7 +92,7 @@ public class ProductService
 	public async Task<IEnumerable<Product>> ListAll()
 	{
 		string query = "{}";
-		
+
 		try
 		{
 			StateQueryResponse<Product> results = await _dapr.QueryStateAsync<Product>(_storeName, query, cancellationToken: CancellationToken.None);

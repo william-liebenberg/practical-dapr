@@ -8,7 +8,8 @@ builder.Services.AddDaprClient();
 builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) => {
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
 	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("products-api"));
 });
 
