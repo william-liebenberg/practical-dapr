@@ -1,3 +1,5 @@
+:: dotnet build
+
 :: merge all the spec files into a single spec for the gateway
 pwsh merge-apis.ps1
 

@@ -13,3 +13,10 @@ public record OrderItem(int Quantity, string ProductId);
 
 // Order holds information about a user order
 public record Order(string OrderId, string Username, string Title, decimal TotalAmount, OrderItem[] Items, OrderStatus Status);
+
+public class UserOrders
+{
+	public string Username { get; set; } = string.Empty;
+	
+	public List<string> Orders { get; set; } = new List<string>();
+}
