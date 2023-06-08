@@ -39,6 +39,7 @@ app.UseSwaggerUi3(c =>
 {
 	c.Path = "/notifications/api";
 	c.DocumentPath = "/notifications/api/v1/specification.json";
+	c.CustomStylesheetPath = "/notifications/api/SwaggerDark.css";
 });
 
 app.MapNotificationsEndpoints();

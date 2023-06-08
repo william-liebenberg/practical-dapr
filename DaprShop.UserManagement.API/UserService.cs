@@ -9,7 +9,7 @@ public class UserService
 {
 	private readonly ILogger<UserService> _logger;
 	private readonly DaprClient _dapr;
-	private readonly string _storeName = "daprshop-statestore";
+	private const string StoreName = "daprshop-statestore";
 
 	public UserService(ILogger<UserService> logger, DaprClient dapr)
 	{
@@ -27,7 +27,7 @@ public class UserService
 	{
 		try
 		{
-			User? user = await _dapr.GetStateAsync<User?>(_storeName, username);
+			User? user = await _dapr.GetStateAsync<User?>(StoreName, username);
 			return user;
 		}
 		catch (DaprException dx)
@@ -48,7 +48,7 @@ public class UserService
 		try
 		{
 			// save the user to the store
-			await _dapr.SaveStateAsync(_storeName, newUser.Username, newUser);
+			await _dapr.SaveStateAsync(StoreName, newUser.Username, newUser);
 		}
 		catch (DaprException dx)
 		{

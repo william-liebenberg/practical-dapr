@@ -88,64 +88,6 @@
           }
         }
       },
-      "CartCleared": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          }
-        }
-      },
-      "OrderStatusChanged": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "orderId": {
-            "type": "string"
-          },
-          "currentStatus": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OrderStatus"
-              }
-            ]
-          },
-          "previousStatus": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OrderStatus"
-              }
-            ]
-          }
-        }
-      },
-      "ProductItemAddedToCart": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "string"
-          }
-        }
-      },
-      "ProductItemRemovedFromCart": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "string"
-          }
-        }
-      },
       "SubmitCartRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -408,58 +350,6 @@
         }
       }
     },
-    "/cart/added": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "ItemAdded",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductItemAddedToCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/cleared": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "Cleared",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CartCleared"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/cart/get": {
       "get": {
         "tags": [
@@ -498,58 +388,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddProductItemToCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/removed": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "ItemRemoved",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductItemRemovedFromCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/StatusChanged": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "StatusChanged",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderStatusChanged"
               }
             }
           },
