@@ -8,9 +8,9 @@ $role="Contributor"
     --name $appName `
     --role $role `
     --scopes /subscriptions/$subscriptionId `
-    --json-auth) | Out-File sp-github.json
+    --json-auth) | Out-File github.secrets.json
 
-$json = Get-Content -Path sp-github.json
+$json = Get-Content -Path github.secrets.json
 
 #Write-Host $json
 
