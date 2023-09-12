@@ -7,7 +7,6 @@ public static class ProductEndpoints
 	public static void MapProductEndpoints(this IEndpointRouteBuilder builder)
 	{
 		var endpoints = builder
-			//.WithOpenApi()
 			.MapGroup("products")
 			.WithTags(new[] { "Products" });
 
@@ -16,40 +15,34 @@ public static class ProductEndpoints
 		{
 			var result = await productService.GetProduct(productId);
 			return result == null ? Results.NotFound() : Results.Ok(result);
-		})
-			//.WithOpenApi()
-			.WithName("GetProduct");
+		}).WithName("GetProduct");
 
 		endpoints.MapGet("catalogue", async ([FromServices] ProductService productService) =>
 		{
 			var results = await productService.ListAll();
 			return Results.Ok(results);
-		})
-			//.WithOpenApi()
-			.WithName("GetCatalogue");
+		}).WithName("GetCatalogue");
 
-		endpoints.MapGet("search", async (string field, string searchTerm, [FromServices] ProductService productService) =>
-		{
-			var results = await productService.Search(field, searchTerm);
-			return Results.Ok(results);
-		})
-			//.WithOpenApi()
-			.WithName("Search");
+		//endpoints.MapGet("search", async (string field, string searchTerm, [FromServices] ProductService productService) =>
+		//{
+		//	var results = await productService.Search(field, searchTerm);
+		//	return Results.Ok(results);
+		//})
+		//	//.WithOpenApi()
+		//	.WithName("Search");
 
-		endpoints.MapGet("query", async (string searchTerm, [FromServices] ProductService productService) =>
-		{
-			var results = await productService.Query(searchTerm);
-			return Results.Ok(results);
-		})
-			//.WithOpenApi()
-			.WithName("Query");
+		//endpoints.MapGet("query", async (string searchTerm, [FromServices] ProductService productService) =>
+		//{
+		//	var results = await productService.Query(searchTerm);
+		//	return Results.Ok(results);
+		//})
+		//	//.WithOpenApi()
+		//	.WithName("Query");
 
 		endpoints.MapPost("seed", async ([FromServices] ProductService productService) =>
 		{
 			await productService.Seed();
 			return Results.Ok();
-		})
-			//.WithOpenApi()
-			.WithName("Seed");
+		}).WithName("Seed");
 	}
 }

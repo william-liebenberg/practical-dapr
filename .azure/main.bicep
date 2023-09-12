@@ -65,7 +65,8 @@ module daprPubSub 'modules/dapr/pubsub.bicep' = {
   name: '${deployment().name}-dapr-pubsub'
   params: {
     containerAppsEnvironmentName: containerAppsEnvironment.outputs.name
-    serviceBusConnectionString: serviceBus.outputs.connectionString
+    //serviceBusConnectionString: serviceBus.outputs.connectionString
+    serviceBusNamespaceName: serviceBus.outputs.serviceBusNamespaceName
   }
 }
 

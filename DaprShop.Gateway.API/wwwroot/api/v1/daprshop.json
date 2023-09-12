@@ -277,66 +277,6 @@
         }
       }
     },
-    "/products/query": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Query",
-        "parameters": [
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/products/search": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Search",
-        "parameters": [
-          {
-            "name": "field",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/products/seed": {
       "post": {
         "tags": [
@@ -504,5 +444,5 @@
       }
     }
   },
-  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))"
+  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))"
 }

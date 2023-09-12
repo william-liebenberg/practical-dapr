@@ -44,8 +44,8 @@ jobs:
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.acadaprshop_USERNAME_54DD }}
-        password: ${{ secrets.acadaprshop_PASSWORD_54DD }}
+        username: ${{ secrets.acadaprshop_USERNAME }}
+        password: ${{ secrets.acadaprshop_PASSWORD }}
 
     - name: Build and push container image to registry
       working-directory: ./DaprShop.Notifications.API

@@ -17,7 +17,7 @@ param ordersApiFqdn string
 param usersApiFqdn string
 param notificationsApiFqdn string
 
-resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: 'gateway-api'
   location: location
   identity: {

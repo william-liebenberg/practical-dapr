@@ -7,7 +7,7 @@ param managedIdentityObjectId string
 // param orderingDbConnectionString string
 // param identityDbConnectionString string
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
   name: vaultName
   location: location
   properties: {

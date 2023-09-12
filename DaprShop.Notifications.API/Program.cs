@@ -1,7 +1,6 @@
 using DaprShop.Notifications.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 

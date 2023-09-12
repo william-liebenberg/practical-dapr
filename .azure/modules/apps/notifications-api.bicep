@@ -11,7 +11,7 @@ param registryPassword string
 @description('The Application Insights Instrumentation Key.')
 param appInsightsInstrumentationKey string
 
-resource containerApp 'Microsoft.App/containerApps@2022-10-01' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: 'notifications-api'
   location: location
   identity: {

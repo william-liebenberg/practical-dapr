@@ -1,7 +1,7 @@
 param location string
 param uniqueSeed string
 
-resource serviceBus 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' = {
+resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
   name: 'sb-${uniqueSeed}'
   location: location
   sku: {
@@ -10,4 +10,5 @@ resource serviceBus 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' = {
   }
 }
 
-output connectionString string = 'Endpoint=sb://${serviceBus.name}.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=${listKeys('${serviceBus.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBus.apiVersion).primaryKey}'
+//output connectionString string = 'Endpoint=sb://${serviceBus.name}.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=${listKeys('${serviceBus.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBus.apiVersion).primaryKey}'
+output serviceBusNamespaceName string = serviceBus.name

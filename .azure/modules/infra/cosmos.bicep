@@ -3,7 +3,7 @@ param uniqueSeed string
 param cosmosAccountName string = 'cosmos-${uniqueSeed}'
 param cosmosDbName string = 'daprShop'
 
-resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
+resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
   name: cosmosAccountName
   location: location
   kind: 'GlobalDocumentDB'
@@ -25,7 +25,7 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2021-04-15' = {
   }
 }
 
-resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-11-15' = {
+resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2023-04-15' = {
   parent: cosmosAccount
   name: cosmosDbName
   properties: {
@@ -35,7 +35,7 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-11-15
   }
 }
 
-resource cosmosCollection 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-11-15' = {
+resource cosmosCollection 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2023-04-15' = {
   parent: cosmosDb
   name: 'state'
   properties: {

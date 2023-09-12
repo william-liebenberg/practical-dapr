@@ -1,35 +1,47 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "dapr": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "notifications/api",
-      "applicationUrl": "http://localhost:23000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "notifications/api",
-      "applicationUrl": "http://localhost:5085",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "notifications/api",
-      "applicationUrl": "https://localhost:7196;http://localhost:5085",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
-  }
+	"profiles": {
+		//"dapr-notifications": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "notifications/api",
+		//	"applicationUrl": "http://localhost:23000",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		//"http": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "notifications/api",
+		//	"applicationUrl": "http://localhost:5085",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		"https": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": true,
+			"launchUrl": "notifications/api",
+			"applicationUrl": "https://localhost:7196;http://localhost:5085",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"dapr": {
+			"commandName": "Executable",
+			"executablePath": "dapr.exe",
+			"commandLineArgs": "run --app-id notifications-api --app-port 7196 --app-protocol https --resources-path ../components/ -- dotnet run . --nobuild -lp https",
+			"workingDirectory": "$(ProjectDir)",
+			"launchBrowser": true,
+			"launchUrl": "notifications/api",
+			"applicationUrl": "https://localhost:7196;http://localhost:5085",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		}
+	}
 }

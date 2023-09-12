@@ -1,35 +1,47 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "dapr": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "users/api",
-      "applicationUrl": "http://localhost:17000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "users/api",
-      "applicationUrl": "http://localhost:5210",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "users/api",
-      "applicationUrl": "https://localhost:7108;http://localhost:5210",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
-  }
+	"profiles": {
+		//"dapr-users": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "users/api",
+		//	"applicationUrl": "http://localhost:17000",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		//"http": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "users/api",
+		//	"applicationUrl": "http://localhost:5210",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		"https": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": true,
+			"launchUrl": "users/api",
+			"applicationUrl": "https://localhost:7108;http://localhost:5210",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"dapr": {
+			"commandName": "Executable",
+			"executablePath": "dapr.exe",
+			"commandLineArgs": "run --app-id users-api --app-port 7108 --app-protocol https --resources-path ../components/ -- dotnet run . --nobuild -lp https",
+			"workingDirectory": "$(ProjectDir)",
+			"launchBrowser": true,
+			"launchUrl": "users/api",
+			"applicationUrl": "https://localhost:7108;http://localhost:5210",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		}
+	}
 }

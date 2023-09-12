@@ -9,9 +9,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43EC5F4-345E-4772-9AE2-49F189A8D21A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		my-secrets.json = my-secrets.json
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		global.json = global.json
 		readme.md = readme.md
 		.github\workflows\run-workflows.ps1 = .github\workflows\run-workflows.ps1
+		secrets.json = secrets.json
 		start-dapr-sidecars.cmd = start-dapr-sidecars.cmd
 	EndProjectSection
 EndProject
@@ -33,7 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr-components", "dapr-com
 		components\statestore.yaml = components\statestore.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaprShop.Notifications.API", "DaprShop.Notifications.API\DaprShop.Notifications.API.csproj", "{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Notifications.API", "DaprShop.Notifications.API\DaprShop.Notifications.API.csproj", "{96041A6D-2AAE-4961-80CD-C9B1CBEE7A82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
