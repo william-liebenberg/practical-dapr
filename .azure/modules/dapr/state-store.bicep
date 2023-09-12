@@ -5,14 +5,14 @@ param cosmosDbName string
 param cosmosCollectionName string
 param cosmosUrl string
 
-resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' existing = {
+resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
   name: cosmosAccountName
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-preview' existing = {
   name: containerAppsEnvironmentName
 
-  resource daprComponent 'daprComponents@2022-10-01' = {
+  resource daprComponent 'daprComponents@2023-05-02-preview' = {
     name: 'daprshop-statestore'
     properties: {
       componentType: 'state.azure.cosmosdb'

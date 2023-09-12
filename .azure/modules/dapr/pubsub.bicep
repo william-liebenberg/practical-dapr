@@ -1,12 +1,20 @@
 param containerAppsEnvironmentName string
 
-@secure()
-param serviceBusConnectionString string
+//@secure()
+//param serviceBusConnectionString string
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+param serviceBusNamespaceName string
+
+resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' existing = {
+  name: serviceBusNamespaceName
+}
+
+var serviceBusConnectionString = 'Endpoint=sb://${serviceBus.name}.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=${listKeys('${serviceBus.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBus.apiVersion).primaryKey}'
+
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-preview' existing = {
   name: containerAppsEnvironmentName
 
-  resource daprComponent 'daprComponents@2022-03-01' = {
+  resource daprComponent 'daprComponents@2023-05-02-preview' = {
     name: 'daprshop-pubsub'
     properties: {
       componentType: 'pubsub.azure.servicebus'

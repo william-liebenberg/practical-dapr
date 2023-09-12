@@ -1,35 +1,47 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "dapr-gateway": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "api",
-      "applicationUrl": "https://localhost:7192;http://localhost:5234",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "api",
-      "applicationUrl": "http://localhost:5234",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "api",
-      "applicationUrl": "https://localhost:7192;http://localhost:5234",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
-  }
+	"profiles": {
+		//"dapr-gateway": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "api",
+		//	"applicationUrl": "https://localhost:7192;http://localhost:5234",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		//"http": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "api",
+		//	"applicationUrl": "http://localhost:5234",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		"https": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": true,
+			"launchUrl": "api",
+			"applicationUrl": "https://localhost:7192;http://localhost:5234",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"dapr": {
+			"commandName": "Executable",
+			"executablePath": "dapr.exe",
+			"commandLineArgs": "run --app-id gateway-api --dapr-http-port 3500 --app-port 7192 --app-protocol https --resources-path ../components/ -- dotnet run . --nobuild -lp https",
+			"workingDirectory": "$(ProjectDir)",
+			"launchBrowser": true,
+			"launchUrl": "api",
+			"applicationUrl": "https://localhost:7192;http://localhost:5234",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		}
+	}
 }

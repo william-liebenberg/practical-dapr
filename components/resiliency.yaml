@@ -1,0 +1,109 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: shop-resiliency
+
+# similar to subscription and configuration specs, scopes lists the Dapr App IDs that this
+# resiliency spec can be used by.
+scopes:
+  - gateway-api
+  - users-api
+  - cart-api
+  - orders-api
+  - products-api
+  - notifications-api
+
+spec:
+  # policies is where timeouts, retries and circuit breaker policies are defined. 
+  # each is given a name so they can be referred to from the targets section in the resiliency spec.
+  policies:
+    # timeouts are simple named durations.
+    timeouts:
+      general: 5s
+      important: 60s
+      
+      DefaultTimeoutPolicy: 7s
+
+    # retries are named templates for retry configurations and are instantiated for life of the operation.
+    retries:
+      pubsubRetry:
+        policy: constant
+        duration: 5s
+        maxRetries: 10
+
+      retryForever:
+        policy: exponential
+        maxInterval: 15s
+        maxRetries: -1 # retry indefinitely
+
+      important:
+        policy: constant
+        duration: 5s
+        maxRetries: 30
+
+      # Global Retry Policy
+      DefaultRetryPolicy:
+        policy: constant
+        duration: 1.5s
+        maxRetries: 8
+
+      DaprBuiltInInitializationRetries:
+        policy: constant
+        duration: 5s
+        maxRetries: 30
+      
+      DefaultStatestoreComponentOutboundRetryPolicy:
+        policy: exponential
+        maxInterval: 60s
+        maxRetries: -1
+      
+      # Global Retry Policy for Inbound Component operations
+      DefaultComponentInboundRetryPolicy:
+        policy: constant
+        duration: 5s
+        maxRetries: 6
+
+      # Global Retry Policy for Apps
+      DefaultAppRetryPolicy:
+        policy: constant
+        duration: 100ms
+        maxRetries: 7
+
+    # circuit breakers are automatically instantiated per component and app instance.
+    # circuit breakers maintain counters that live as long as the Dapr sidecar is running. They are not persisted.
+    circuitBreakers:
+      DefaultComponentCircuitBreakerPolicy:
+        maxRequests: 1
+        timeout: 30s 
+        trip: consecutiveFailures >= 5
+
+      simpleCB:
+        maxRequests: 1
+        timeout: 30s 
+        trip: consecutiveFailures >= 5
+
+      pubsubCB:
+        maxRequests: 1
+        interval: 8s
+        timeout: 45s
+        trip: consecutiveFailures > 8
+
+  # targets are what named policies are applied to. Dapr supports 3 target types - apps, components and actors
+  targets:
+
+    components:
+      # for state stores, policies apply to saving and retrieving state.
+      daprshop-statestore: 
+        outbound:
+          timeout: important
+          retry: retryForever
+          circuitBreaker: simpleCB
+
+      daprshop-pubsub: 
+        outbound:
+          retry: pubsubRetry
+          circuitBreaker: pubsubCB
+        inbound: # inbound only applies to delivery from sidecar to app
+          timeout: important
+          retry: important
+          circuitBreaker: pubsubCB

@@ -1,6 +1,6 @@
 ﻿using Yarp.ReverseProxy.Configuration;
 
-public record ApiRouteConfig(string RouteName, string ClusterName, string RoutePrefix, string HostUrl, string OpenApiSpecUrl);
+namespace DaprShop.Gateway.API;
 
 public static class ApiGatewayConfiguration
 {

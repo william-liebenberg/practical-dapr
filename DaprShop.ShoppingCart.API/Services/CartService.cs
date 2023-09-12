@@ -3,8 +3,6 @@ using Dapr.Client;
 using DaprShop.Contracts.Entities;
 using DaprShop.Contracts.Events;
 
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
-
 namespace DaprShop.Shopping.API.Services;
 
 public class CartService
@@ -66,7 +64,7 @@ public class CartService
 			cart.AddItem(new CartItem(product.ProductId, product.Name, product.UnitPrice, quantity));
 		}
 
-		
+
 		// save/update the cart
 		await _dapr.SaveStateAsync(_storeName, username, cart);
 
@@ -119,7 +117,7 @@ public class CartService
 				Username: username,
 				Title: $"Order {DateTime.Now.ToShortDateString()}",
 				TotalAmount: cart.Items.Sum(i => i.Price),
-				Items: cart.Items.Select(i => new OrderItem(1, i.ProductId))
+				Items: cart.Items.Select(i => new OrderItem(i.Quantity, i.ProductId))
 										  .ToArray()
 			);
 

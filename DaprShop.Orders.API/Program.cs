@@ -11,7 +11,8 @@ builder.Services.AddHostedService<LongRunningService>();
 builder.Services.AddSingleton<BackgroundWorkerQueue>();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) => {
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
 	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("orders-api"));
 });
 

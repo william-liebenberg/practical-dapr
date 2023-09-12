@@ -88,64 +88,6 @@
           }
         }
       },
-      "CartCleared": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          }
-        }
-      },
-      "OrderStatusChanged": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "orderId": {
-            "type": "string"
-          },
-          "currentStatus": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OrderStatus"
-              }
-            ]
-          },
-          "previousStatus": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OrderStatus"
-              }
-            ]
-          }
-        }
-      },
-      "ProductItemAddedToCart": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "string"
-          }
-        }
-      },
-      "ProductItemRemovedFromCart": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "productId": {
-            "type": "string"
-          }
-        }
-      },
       "SubmitCartRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -335,124 +277,12 @@
         }
       }
     },
-    "/products/query": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Query",
-        "parameters": [
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/products/search": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "Search",
-        "parameters": [
-          {
-            "name": "field",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/products/seed": {
       "post": {
         "tags": [
           "Products"
         ],
         "operationId": "Seed",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/added": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "ItemAdded",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductItemAddedToCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/cleared": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "Cleared",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CartCleared"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
         "responses": {
           "200": {
             "description": ""
@@ -498,58 +328,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AddProductItemToCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/removed": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "ItemRemoved",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductItemRemovedFromCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/StatusChanged": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "StatusChanged",
-        "requestBody": {
-          "x-name": "event",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderStatusChanged"
               }
             }
           },
@@ -666,5 +444,5 @@
       }
     }
   },
-  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))"
+  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))"
 }

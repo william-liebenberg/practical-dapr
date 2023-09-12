@@ -10,7 +10,8 @@ builder.Services
 	.LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) => {
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
 	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("gateway-api"));
 });
 

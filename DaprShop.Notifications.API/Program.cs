@@ -1,7 +1,6 @@
 using DaprShop.Notifications.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +9,8 @@ builder.Services.AddDaprClient();
 // TODO: Add Email service
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) => {
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
 	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("notifications-api"));
 });
 
@@ -38,6 +38,7 @@ app.UseSwaggerUi3(c =>
 {
 	c.Path = "/notifications/api";
 	c.DocumentPath = "/notifications/api/v1/specification.json";
+	c.CustomStylesheetPath = "/notifications/api/SwaggerDark.css";
 });
 
 app.MapNotificationsEndpoints();

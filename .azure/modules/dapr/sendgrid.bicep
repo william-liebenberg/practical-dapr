@@ -3,10 +3,10 @@ param containerAppsEnvironmentName string
 @secure()
 param sendgridApiKey string
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-preview' existing = {
   name: containerAppsEnvironmentName
 
-  resource daprComponent 'daprComponents@2022-03-01' = {
+  resource daprComponent 'daprComponents@2023-05-02-preview' = {
     name: 'sendgrid'
     properties: {
       componentType: 'bindings.twilio.sendgrid'

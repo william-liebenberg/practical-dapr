@@ -1,0 +1,38 @@
+name: Provision all core infrastructure resources to Azure
+
+on:
+  workflow_dispatch:
+    inputs:
+      resourceGroup:
+        description: "Resource Group Name"
+        type: string
+        required: true
+
+env:
+  CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
+  CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
+  
+jobs:
+  deploy-bicep:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: deploy
+        uses: azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          failOnStdErr: false
+          resourceGroupName: ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }}
+          template: .azure/main.bicep
+          parameters: registry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} registryUsername=${{ secrets.acadaprshop_USERNAME }} registryPassword=${{ secrets.acadaprshop_PASSWORD }} sendGridApiKey=${{ secrets.SENDGRID_APIKEY }}

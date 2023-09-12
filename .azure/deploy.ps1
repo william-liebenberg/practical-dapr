@@ -1,11 +1,20 @@
 $resourceGroupName = "aca-dapr-shop"
 $registryName="acadaprshop.azurecr.io"
 $registryUsername="acadaprshop"
-$registryPassword="tu3ihs+ssR5iu22voqRmmYOqkWWvjxk2hPuQhtfR6r+ACRCqMzGh"
+$registryPassword="LnQMuZkavfgFuF+aFwI//mUQDZ6RxT0S7IV6IfUofs+ACRCeJbH9"
+$subscriptionId="5fb293a6-c2ac-4ee7-bad0-15d8f4376034"
+$sendgridApiKey="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"
 
-az group create --name $resourceGroupName --location australiaeast
+az group create --name $resourceGroupName --location australiasoutheast
 
-az deployment group create --resource-group $resourceGroupName --template-file main.bicep --parameters registry=$registryName registryUsername=$registryUsername registryPassword=$registryPassword
+az deployment group create `
+    --resource-group $resourceGroupName `
+    --template-file main.bicep `
+    --parameters location=australiaeast `
+        registry=$registryName `
+        registryUsername=$registryUsername `
+        registryPassword=$registryPassword `
+        sendgridApiKey=$sendgridApiKey
 
 # az containerapp create `
 #     --name gateway-api `

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
@@ -9,8 +9,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Yarp.ReverseProxy" Version="2.0.0" />
+		<PackageReference Include="Yarp.ReverseProxy" Version="2.0.1" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="NSwag.AspNetCore" Version="13.20.0" />
+	  <PackageReference Update="NSwag.MSBuild" Version="13.20.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

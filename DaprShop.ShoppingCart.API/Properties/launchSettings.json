@@ -1,34 +1,47 @@
 {
-  "profiles": {
-    "dapr": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "cart/api",
-      "applicationUrl": "http://localhost:18000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "http": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "cart/api",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5057"
-    },
-    "https": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "cart/api",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7283;http://localhost:5057"
-    }
-  }
+	"$schema": "https://json.schemastore.org/launchsettings.json",
+	"profiles": {
+		//"dapr-cart": {
+		//	"commandName": "Project",
+		//	"dotnetRunMessages": true,
+		//	"launchBrowser": true,
+		//	"launchUrl": "cart/api",
+		//	"applicationUrl": "http://localhost:18000",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	}
+		//},
+		//"http": {
+		//	"commandName": "Project",
+		//	"launchBrowser": true,
+		//	"launchUrl": "cart/api",
+		//	"environmentVariables": {
+		//		"ASPNETCORE_ENVIRONMENT": "Development"
+		//	},
+		//	"dotnetRunMessages": true,
+		//	"applicationUrl": "http://localhost:5057"
+		//},
+		"https": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": true,
+			"launchUrl": "cart/api",
+			"applicationUrl": "https://localhost:7283;http://localhost:5057",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		"dapr": {
+			"commandName": "Executable",
+			"executablePath": "dapr.exe",
+			"commandLineArgs": "run --app-id cart-api --app-port 7283 --app-protocol https --resources-path ../components/ -- dotnet run . --nobuild -lp https",
+			"workingDirectory": "$(ProjectDir)",
+			"launchBrowser": true,
+			"launchUrl": "cart/api",
+			"applicationUrl": "https://localhost:7283;http://localhost:5057",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		}
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using DaprShop.Contracts.Entities;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaprShop.UserManagement.API;
@@ -8,7 +9,6 @@ public static class UserManagementEndpoints
 	public static void MapUserManagementEndpoints(this IEndpointRouteBuilder builder)
 	{
 		var userRoutes = builder
-			//.WithOpenApi()
 			.MapGroup("users")
 			.WithTags(new[] { "Users" });
 
@@ -16,17 +16,13 @@ public static class UserManagementEndpoints
 		{
 			User? user = await userService.GetUser(username);
 			return user == null ? Results.NotFound() : Results.Ok(user);
-		})
-			//.WithOpenApi()
-			.WithName("GetUser");
+		}).WithName("GetUser");
 
 		userRoutes.MapGet("isRegistered", async (string username, [FromServices] UserService userService) =>
 		{
 			User? user = await userService.GetUser(username);
 			return user == null ? Results.NotFound() : Results.Ok();
-		})
-			//.WithOpenApi()
-			.WithName("IsRegistered");
+		}).WithName("IsRegistered");
 
 		userRoutes.MapPost("register", async (RegisterUserRequest request, [FromServices] UserService userService) =>
 		{
@@ -40,8 +36,6 @@ public static class UserManagementEndpoints
 			{
 				return Results.BadRequest(ex);
 			}
-		})
-			//.WithOpenApi()
-			.WithName("RegisterUser");
+		}).WithName("RegisterUser");
 	}
 }

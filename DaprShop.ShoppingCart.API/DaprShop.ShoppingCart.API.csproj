@@ -10,13 +10,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dapr.AspNetCore" Version="1.10.0" />
-		<PackageReference Include="Dapr.Client" Version="1.10.0" />
+		<PackageReference Include="Dapr.AspNetCore" Version="1.11.0" />
+		<PackageReference Include="Dapr.Client" Version="1.11.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
 		<ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="NSwag.AspNetCore" Version="13.20.0" />
+	  <PackageReference Update="NSwag.MSBuild" Version="13.20.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 </Project>

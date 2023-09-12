@@ -477,3 +477,6 @@ $RECYCLE.BIN/
 *.lnk
 
 secrets.json
+/.idea/.idea.DaprShop/.idea
+*.drawio.bkp
+github.secrets.json

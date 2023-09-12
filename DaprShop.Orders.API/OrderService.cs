@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-using Dapr;
+﻿using Dapr;
 using Dapr.Client;
 
 using DaprShop.Contracts.Entities;
@@ -73,7 +71,7 @@ public class OrderService
 		try
 		{
 			// get all the orders for an existing user
-			List<Order> ordersForUser = (await _dapr.GetStateAsync<Order[]>(_storeName, newOrder.Username))?.ToList() ?? new List<Order>();
+			IEnumerable<Order> ordersForUser = await GetOrdersForUser(newOrder.Username);
 
 			// check for duplicates
 			var duplicateOrder = ordersForUser.FirstOrDefault(o => o.OrderId == newOrder.OrderId);
@@ -84,11 +82,15 @@ public class OrderService
 			else
 			{
 				// update the list of orders for the user
-				ordersForUser.Add(newOrder);
-			}
+				var userOrders = new UserOrders()
+				{
+					Username = newOrder.Username,
+					Orders = new(ordersForUser.Select(o => o.OrderId))
+				};
+				userOrders.Orders.Add(newOrder.OrderId);
 
-			// save the user orders
-			await _dapr.SaveStateAsync(_storeName, newOrder.Username, ordersForUser);
+				await SaveOrdersForUser(userOrders);
+			}
 		}
 		catch (DaprException dx)
 		{
@@ -101,11 +103,37 @@ public class OrderService
 	{
 		try
 		{
-			return await _dapr.GetStateAsync<Order[]>(_storeName, username);
+			var userOrders = await _dapr.GetStateAsync<UserOrders>(_storeName, username);
+			userOrders ??= new UserOrders
+			{
+				Username = username
+			};
+
+			List<Order> orders = new();
+			foreach (string orderId in userOrders.Orders)
+			{
+				var order = await _dapr.GetStateAsync<Order>(_storeName, orderId);
+				orders.Add(order);
+			}
+			return orders;
 		}
 		catch (DaprException dx)
 		{
 			_logger.LogError(dx, "Could not get orders for user: {username}", username);
+			throw;
+		}
+	}
+
+	private async Task SaveOrdersForUser(UserOrders ordersForUser)
+	{
+		try
+		{
+			// save the user orders
+			await _dapr.SaveStateAsync(_storeName, ordersForUser.Username, ordersForUser);
+		}
+		catch (DaprException dx)
+		{
+			_logger.LogError(dx, "Could not save orders for user: {username}", ordersForUser.Username);
 			throw;
 		}
 	}
@@ -143,7 +171,8 @@ public class OrderService
 		// check we have a new order, if not fail!
 		if (order.Status != OrderStatus.OrderNew)
 		{
-			throw new InvalidOperationException("Can't reprocess non-new orders!");
+			// instead of throwing...we could check the current status and respond nicely...
+			return;
 		}
 
 		_logger.LogInformation("Processing order: {orderId} - Saving new Order", order.OrderId);
