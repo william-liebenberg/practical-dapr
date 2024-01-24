@@ -1,5 +1,7 @@
 # Practical Microservice Development with Dapr
 
+![Alt](https://repobeats.axiom.co/api/embed/72c3f8104ddc59671efd2949452000a9255908d3.svg "Repobeats analytics image")
+
 ## Install Dapr CLI
 
 ```ps1
