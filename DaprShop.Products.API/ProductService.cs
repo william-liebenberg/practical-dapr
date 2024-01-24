@@ -17,6 +17,22 @@ public class ProductService
 		_dapr = dapr;
 	}
 
+	public async Task<Product> AddProduct(string name, string description, decimal unitPrice, string imageUrl)
+	{
+		try
+		{
+			var id = Guid.NewGuid().ToString();
+			var product = new Product(id, name, description, unitPrice, imageUrl);
+			await _dapr.SaveStateAsync(_storeName, product.ProductId, product);
+			return product;
+		}
+		catch (DaprException dx)
+		{
+			_logger.LogError(dx, "Could not add new product!");
+			throw;
+		}
+	}
+
 	public async Task<Product> GetProduct(string productId)
 	{
 		try
@@ -25,7 +41,7 @@ public class ProductService
 		}
 		catch (DaprException dx)
 		{
-			_logger.LogError(dx, "Could not perform product search");
+			_logger.LogError(dx, $"Could not retrieve product with ID: {productId}");
 			throw;
 		}
 	}
@@ -113,10 +129,10 @@ public class ProductService
 	{
 		try
 		{
-			var p1 = new Product("1", "Bread", "Fluffy freshly baked bread", 5, "");
-			var p2 = new Product("2", "Cheese", "Kraft Tastey Cheese block", 10, "");
-			var p3 = new Product("3", "Soy Milk", "Soy milk", 5, "");
-			var p4 = new Product("4", "Coffee", "Nescafe Freeze dried coffee", 5, "");
+			var p1 = new Product("1", "Bread", "Fluffy freshly baked bread", 5, "https://upload.wikimedia.org/wikipedia/commons/c/cd/Sandwich_bread_%28Bakers_Choice%29.JPG");
+			var p2 = new Product("2", "Cheese", "Kraft Tastey Cheese block", 10, "https://cdn0.woolworths.media/content/wowproductimages/large/194717.jpg");
+			var p3 = new Product("3", "Soy Milk", "Soy milk", 5, "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/004-soymilk.jpg/1200px-004-soymilk.jpg");
+			var p4 = new Product("4", "Coffee", "Nescafe Freeze dried coffee", 5, "https://cdn0.woolworths.media/content/wowproductimages/large/034978.jpg");
 
 			await _dapr.SaveStateAsync(_storeName, p1.ProductId, p1);
 			await _dapr.SaveStateAsync(_storeName, p2.ProductId, p2);

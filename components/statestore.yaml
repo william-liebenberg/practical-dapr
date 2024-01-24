@@ -3,18 +3,36 @@ kind: Component
 metadata:
   name: daprshop-statestore
 spec:
-  type: state.azure.cosmosdb
+  type: state.redis
   version: v1
   metadata:
-  - name: url
-    value: https://localhost:8081
-  - name: masterKey
+  - name: redisHost
+    value: '0.0.0.0:6379'
+  - name: redisPassword
     secretKeyRef:
-      name: cosmosKey
-      key: cosmosKey
-  - name: database
-    value: AcaDaprShop
-  - name: collection
-    value: StateStore
+      name: redisPassword
+      key: redisPassword
 auth:
   secretStore: local-secrets
+
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: daprshop-statestore
+# spec:
+#   type: state.azure.cosmosdb
+#   version: v1
+#   metadata:
+#   - name: url
+#     value: https://localhost:8081
+#   - name: masterKey
+#     secretKeyRef:
+#       name: cosmosKey
+#       key: cosmosKey
+#   - name: database
+#     value: AcaDaprShop
+#   - name: collection
+#     value: StateStore
+# auth:
+#   secretStore: local-secrets

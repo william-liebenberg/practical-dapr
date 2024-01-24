@@ -53,10 +53,10 @@ public class CartService
 		CartItem? existingItem = cart.FindCartItem(productId);
 		if (existingItem != null)
 		{
-			var newItem = existingItem with { Quantity = existingItem.Quantity + quantity };
-			if (cart.RemoveCartItem(productId))
+			var adjustedQuantity = existingItem.Quantity + quantity;
+			if (!cart.AdjustCartItem(productId, adjustedQuantity))
 			{
-				cart.AddItem(newItem);
+				throw new Exception($"Could not adjust quantity of product {productId} in cart for user {username}");
 			}
 		}
 		else
@@ -81,7 +81,7 @@ public class CartService
 	public async Task<bool> RemoveItemFromShoppingCart(string username, string productId, int quantity)
 	{
 		Cart cart = await GetCart(username);
-		if (cart.RemoveCartItem(productId))
+		if (cart.AdjustCartItem(productId, quantity))
 		{
 			var itemRemoved = new ProductItemRemovedFromCart() { ProductId = productId };
 			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemRemoved);
