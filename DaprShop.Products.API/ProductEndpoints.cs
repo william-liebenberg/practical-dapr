@@ -2,6 +2,9 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+public record AddProductRequest(string Name, string Description, decimal UnitPrice, string ImageUrl);
+
+
 public static class ProductEndpoints
 {
 	public static void MapProductEndpoints(this IEndpointRouteBuilder builder)
@@ -10,6 +13,11 @@ public static class ProductEndpoints
 			.MapGroup("products")
 			.WithTags(new[] { "Products" });
 
+		endpoints.MapPost("add", async ([FromBody] AddProductRequest request, [FromServices] ProductService productService) =>
+		{
+			var result = await productService.AddProduct(request.Name, request.Description, request.UnitPrice, request.ImageUrl);
+			return result == null ? Results.NotFound() : Results.Ok(result);
+		}).WithName("AddProduct");
 
 		endpoints.MapGet("get", async (string productId, [FromServices] ProductService productService) =>
 		{

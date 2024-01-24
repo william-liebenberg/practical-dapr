@@ -24,6 +24,27 @@ public static class CartExtensions
 		return existingItem != null && cart.Items.Remove(existingItem);
 	}
 
+	public static bool AdjustCartItem(this Cart cart, string productId, int newQuantity)
+	{
+		CartItem? existingItem = cart.FindCartItem(productId);
+		if (existingItem is null)
+		{
+			return false;
+		}
+
+		existingItem = existingItem with
+		{
+			Quantity = newQuantity
+		};
+
+		if (existingItem.Quantity <= 0)
+		{
+			cart.Items.Remove(existingItem);
+		}
+
+		return true;
+	}
+
 	public static bool IsEmpty(this Cart cart)
 	{
 		if (cart.Items is not null)
