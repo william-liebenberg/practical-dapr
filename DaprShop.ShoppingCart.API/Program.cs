@@ -1,3 +1,5 @@
+using Dapr.Client;
+
 using DaprShop.Shopping.API;
 using DaprShop.Shopping.API.Services;
 
@@ -6,6 +8,10 @@ using Microsoft.ApplicationInsights.Extensibility;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
+
+builder.Services.AddKeyedScoped("products-api", (sp, _) => DaprClient.CreateInvokeHttpClient("products-api"));
+builder.Services.AddKeyedScoped("users-api", (sp, _) => DaprClient.CreateInvokeHttpClient("users-api"));
+
 builder.Services.AddScoped<CartService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
@@ -34,7 +40,7 @@ app.UseStaticFiles(new StaticFileOptions()
 	RequestPath = "/cart"
 });
 
-app.UseSwaggerUi3(c =>
+app.UseSwaggerUi(c =>
 {
 	c.Path = "/cart/api";
 	c.DocumentPath = "/cart/api/v1/specification.json";

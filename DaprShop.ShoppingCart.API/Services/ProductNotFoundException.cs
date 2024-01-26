@@ -16,9 +16,5 @@ namespace DaprShop.Shopping.API.Services
 		public ProductNotFoundException(string? message, Exception? innerException) : base(message, innerException)
 		{
 		}
-
-		protected ProductNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-		}
 	}
 }

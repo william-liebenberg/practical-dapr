@@ -12,9 +12,11 @@ public static class NotificationsEndpoints
 
 	public static void MapNotificationsEndpoints(this IEndpointRouteBuilder builder)
 	{
-		// RouteGroupBuilder notifications = builder
-		// 	.MapGroup("notifications")
-		// 	.WithTags(new[] { "Notifications" });
+		RouteGroupBuilder notifications = builder
+			.MapGroup("notifications")
+			.WithTags(new[] { "Notifications" });
+
+		notifications.MapGet("healthz", () => { return Results.Ok(); });
 
 		// notifications.MapPost("OrderCompleted", async ([FromBody] OrderCompleted orderCompletedEvent) =>
 		// {

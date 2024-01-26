@@ -16,8 +16,4 @@ class UserAlreadyExistsException : Exception
 	public UserAlreadyExistsException(string? message, Exception? innerException) : base(message, innerException)
 	{
 	}
-
-	protected UserAlreadyExistsException(SerializationInfo info, StreamingContext context) : base(info, context)
-	{
-	}
 }

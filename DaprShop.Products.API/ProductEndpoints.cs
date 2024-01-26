@@ -1,5 +1,8 @@
 ﻿namespace DaprShop.Products.API;
 
+using DaprShop.Contracts.Entities;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 public record AddProductRequest(string Name, string Description, decimal UnitPrice, string ImageUrl);
@@ -12,6 +15,8 @@ public static class ProductEndpoints
 		var endpoints = builder
 			.MapGroup("products")
 			.WithTags(new[] { "Products" });
+
+		endpoints.MapGet("healthz", () => { return Results.Ok(); });
 
 		endpoints.MapPost("add", async ([FromBody] AddProductRequest request, [FromServices] ProductService productService) =>
 		{

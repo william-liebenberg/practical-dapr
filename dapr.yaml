@@ -4,6 +4,12 @@ common: # optional section for variables shared across apps
   appLogDestination: fileAndConsole # (optional), can be file, console or fileAndConsole. default is fileAndConsole.
   daprdLogDestination: file # (optional), can be file, console or fileAndConsole. default is file.
   appSSL: true
+  appProtocol: http
+  #app-protocol: https
+  # enableAppHealthCheck: false
+  # appHealthProbeInterval: 1
+  # appHealthProbeTimeout: 500
+  # appHealthThreshold: 3
   env:  # any environment variable shared across apps
     DEBUG: true
 apps:
@@ -11,29 +17,35 @@ apps:
     appDirPath: ./DaprShop.Gateway.API/
     appPort: 7192
     daprHTTPPort: 3500
-    command: ["dotnet", "run", "DaprShop.Gateway.API.csproj", "-lp", "https", "--no-build", "--", "start", "msedge", "https://localhost:7192/api"]
+    appHealthCheckPath: /healthz
+    command: ["dotnet", "run", "DaprShop.Gateway.API.csproj", "-lp", "https", "--no-build"]
   - appID: notifications-api
     appDirPath: ./DaprShop.Notifications.API/
     appPort: 7196
     daprHTTPPort: 3501
+    appHealthCheckPath: /notifications/healthz
     command: ["dotnet", "run", "DaprShop.Notifications.API.csproj", "-lp", "https", "--no-build"]
   - appID: orders-api
     appDirPath: ./DaprShop.Orders.API/
     appPort: 7233
     daprHTTPPort: 3502
+    appHealthCheckPath: /orders/healthz
     command: ["dotnet", "run", "DaprShop.Orders.API.csproj", "-lp", "https", "--no-build"]
   - appID: products-api
     appDirPath: ./DaprShop.Products.API/
     appPort: 7084
     daprHTTPPort: 3503
+    appHealthCheckPath: /products/healthz
     command: ["dotnet", "run", "DaprShop.Products.API.csproj", "-lp", "https", "--no-build"]
   - appID: cart-api
     appDirPath: ./DaprShop.ShoppingCart.API/
     appPort: 7283
     daprHTTPPort: 3504
+    appHealthCheckPath: /cart/healthz
     command: ["dotnet", "run", "DaprShop.ShoppingCart.API.csproj", "-lp", "https", "--no-build"]
   - appID: users-api
     appDirPath: ./DaprShop.UserManagement.API/
     appPort: 7108
     daprHTTPPort: 3505
+    appHealthCheckPath: /users/healthz
     command: ["dotnet", "run", "DaprShop.UserManagement.API.csproj", "-lp", "https", "--no-build"]

@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Products API",
@@ -7,6 +7,19 @@
     "version": "v1"
   },
   "paths": {
+    "/products/healthz": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "GetProductsHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/add": {
       "post": {
         "tags": [
@@ -15,7 +28,6 @@
         "operationId": "AddProduct",
         "requestBody": {
           "x-name": "request",
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -45,8 +57,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "x-position": 1
           }
@@ -91,17 +102,17 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "name": {
+          "Name": {
             "type": "string"
           },
-          "description": {
+          "Description": {
             "type": "string"
           },
-          "unitPrice": {
+          "UnitPrice": {
             "type": "number",
             "format": "decimal"
           },
-          "imageUrl": {
+          "ImageUrl": {
             "type": "string"
           }
         }
