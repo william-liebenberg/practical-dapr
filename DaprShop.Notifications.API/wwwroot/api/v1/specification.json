@@ -6,50 +6,5 @@
     "description": "Notifications Service",
     "version": "v1"
   },
-  "paths": {
-    "/notifications/OrderCompleted": {
-      "post": {
-        "tags": [
-          "Notifications"
-        ],
-        "operationId": "ReceiveCompletedOrder",
-        "requestBody": {
-          "x-name": "orderCompletedEvent",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderCompleted"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "OrderCompleted": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string",
-            "nullable": true
-          },
-          "orderId": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      }
-    }
-  }
+  "components": {}
 }
