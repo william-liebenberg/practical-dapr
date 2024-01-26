@@ -13,6 +13,8 @@ public static class ShoppingCartEndpoints
 			.MapGroup("cart")
 			.WithTags(new[] { "Cart" });
 
+		cartRoutes.MapGet("healthz", () => { return Results.Ok(); });
+
 		cartRoutes.MapGet("get", async (string username, [FromServices] CartService cartService) =>
 		{
 			try

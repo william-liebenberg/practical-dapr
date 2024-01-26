@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "DaprShop Gateway API",
@@ -7,6 +7,16 @@
     "version": "v1"
   },
   "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "GetHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/info": {
       "get": {
         "tags": [

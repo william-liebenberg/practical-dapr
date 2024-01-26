@@ -34,7 +34,7 @@ app.UseStaticFiles(new StaticFileOptions()
 	RequestPath = "/notifications"
 });
 
-app.UseSwaggerUi3(c =>
+app.UseSwaggerUi(c =>
 {
 	c.Path = "/notifications/api";
 	c.DocumentPath = "/notifications/api/v1/specification.json";

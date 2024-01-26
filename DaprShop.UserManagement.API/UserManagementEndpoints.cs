@@ -12,6 +12,8 @@ public static class UserManagementEndpoints
 			.MapGroup("users")
 			.WithTags(new[] { "Users" });
 
+		userRoutes.MapGet("healthz", () => { return Results.Ok(); });
+
 		userRoutes.MapGet("get", async (string username, [FromServices] UserService userService) =>
 		{
 			User? user = await userService.GetUser(username);

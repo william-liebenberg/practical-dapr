@@ -13,10 +13,12 @@ public static class OrderEndpoints
 			.MapGroup("orders")
 			.WithTags(new[] { "Orders" });
 
+		orders.MapGet("healthz", () => { return Results.Ok(); });
+
 		orders.MapGet("get", async (string orderId, [FromServices] OrderService orderService) =>
 		{
-			var result = await orderService.GetOrder(orderId);
-			return Results.Ok(result);
+			Order? result = await orderService.GetOrder(orderId);
+			return result == null ? Results.NotFound() : Results.Ok(result);
 		}).WithName("GetOrder");
 
 		orders.MapGet("user", async (string username, [FromServices] OrderService orderService) =>

@@ -9,23 +9,28 @@ public class CartService
 {
 	private readonly ILogger<CartService> _logger;
 	private readonly DaprClient _dapr;
-
+	private readonly HttpClient _productsHttpClient;
+	private readonly HttpClient _usersHttpClient;
 	private readonly string _storeName = "daprshop-statestore";
 	private readonly string _pubsubName = "daprshop-pubsub";
 	private readonly string _cartTopic = "daprshop.cart.items";
 	private readonly string _ordersQueueTopic = "daprshop.orders.queue";
 
-	public CartService(ILogger<CartService> logger, DaprClient dapr)
+	public CartService(ILogger<CartService> logger, DaprClient dapr, 
+		[FromKeyedServices("products-api")] HttpClient productsHttpClient,
+		[FromKeyedServices("users-api")] HttpClient usersHttpClient)
 	{
 		_logger = logger;
 		_dapr = dapr;
+		_productsHttpClient = productsHttpClient;
+		_usersHttpClient = usersHttpClient;
 	}
 
 	public async Task AddItemToShoppingCart(string username, string productId, int quantity)
 	{
 		// first check if product is valid (and in stock) by calling product service to get details of Product (via productId)
-		var productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
-		var product = await productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={productId}");
+		//var productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+		var product = await _productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={productId}");
 		if (product == null)
 		{
 			_logger.LogInformation("Could not retrieve product with Id {productId} from Product Service", productId);
@@ -37,8 +42,8 @@ public class CartService
 		}
 
 		// check if the user is valid (registered) by calling the user service to get the details of the User (via username)
-		var usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
-		var user = await usersHttpClient.GetFromJsonAsync<User>($"users/get?username={username}");
+		//var usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+		var user = await _usersHttpClient.GetFromJsonAsync<User>($"users/get?username={username}");
 		if (user == null)
 		{
 			_logger.LogInformation("Could not retrieve user {username} from User Service", username);
@@ -50,20 +55,10 @@ public class CartService
 		}
 
 		Cart cart = await GetCart(username);
-		CartItem? existingItem = cart.FindCartItem(productId);
-		if (existingItem != null)
+		if (!cart.AdjustCartItem(product, quantity))
 		{
-			var adjustedQuantity = existingItem.Quantity + quantity;
-			if (!cart.AdjustCartItem(productId, adjustedQuantity))
-			{
-				throw new Exception($"Could not adjust quantity of product {productId} in cart for user {username}");
-			}
+			throw new Exception($"Could not adjust quantity of product {productId} in cart for user {username}");
 		}
-		else
-		{
-			cart.AddItem(new CartItem(product.ProductId, product.Name, product.UnitPrice, quantity));
-		}
-
 
 		// save/update the cart
 		await _dapr.SaveStateAsync(_storeName, username, cart);
@@ -81,7 +76,7 @@ public class CartService
 	public async Task<bool> RemoveItemFromShoppingCart(string username, string productId, int quantity)
 	{
 		Cart cart = await GetCart(username);
-		if (cart.AdjustCartItem(productId, quantity))
+		if (cart.RemoveCartItem(productId))
 		{
 			var itemRemoved = new ProductItemRemovedFromCart() { ProductId = productId };
 			await _dapr.PublishEventAsync(_pubsubName, _cartTopic, itemRemoved);

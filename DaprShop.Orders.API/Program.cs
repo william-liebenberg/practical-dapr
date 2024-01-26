@@ -36,7 +36,7 @@ app.UseStaticFiles(new StaticFileOptions()
 	RequestPath = "/orders"
 });
 
-app.UseSwaggerUi3(c =>
+app.UseSwaggerUi(c =>
 {
 	c.Path = "/orders/api";
 	c.DocumentPath = "/orders/api/v1/specification.json";

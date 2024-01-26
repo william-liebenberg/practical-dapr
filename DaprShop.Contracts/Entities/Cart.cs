@@ -24,24 +24,30 @@ public static class CartExtensions
 		return existingItem != null && cart.Items.Remove(existingItem);
 	}
 
-	public static bool AdjustCartItem(this Cart cart, string productId, int newQuantity)
+	public static bool AdjustCartItem(this Cart cart, Product product, int quantity)
 	{
-		CartItem? existingItem = cart.FindCartItem(productId);
+		CartItem? existingItem = cart.FindCartItem(product.ProductId);
 		if (existingItem is null)
 		{
-			return false;
+			cart.AddItem(new CartItem(product.ProductId, product.Name, product.UnitPrice, quantity));
+			return true;
 		}
 
-		existingItem = existingItem with
+		var adjustedItem = existingItem with
 		{
-			Quantity = newQuantity
+			Quantity = existingItem.Quantity + quantity
 		};
 
-		if (existingItem.Quantity <= 0)
+		if (adjustedItem.Quantity <= 0)
 		{
 			cart.Items.Remove(existingItem);
 		}
-
+		else
+		{
+			cart.Items.Remove(existingItem);
+			cart.Items.Add(adjustedItem);
+		}
+		
 		return true;
 	}
 

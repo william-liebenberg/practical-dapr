@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Shopping Cart API",
@@ -7,6 +7,19 @@
     "version": "v1"
   },
   "paths": {
+    "/cart/healthz": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "GetCartHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/cart/get": {
       "get": {
         "tags": [
@@ -19,8 +32,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             },
             "x-position": 1
           }
@@ -40,7 +52,6 @@
         "operationId": "AddItem",
         "requestBody": {
           "x-name": "item",
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -66,7 +77,6 @@
         "operationId": "SubmitOrder",
         "requestBody": {
           "x-name": "req",
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -91,13 +101,13 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "username": {
+          "Username": {
             "type": "string"
           },
-          "productId": {
+          "ProductId": {
             "type": "string"
           },
-          "quantity": {
+          "Quantity": {
             "type": "integer",
             "format": "int32"
           }
@@ -107,7 +117,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "username": {
+          "Username": {
             "type": "string"
           }
         }

@@ -37,10 +37,10 @@ public class OrderService
 
 	public async Task<bool> OrderExists(string orderId)
 	{
-		return await GetOrder(orderId) != null;
+		return await GetOrder(orderId) is not null;
 	}
 
-	public async Task<Order> GetOrder(string orderId)
+	public async Task<Order?> GetOrder(string orderId)
 	{
 		try
 		{
@@ -138,8 +138,14 @@ public class OrderService
 		}
 	}
 
-	public async Task SetStatus(Order order, OrderStatus newStatus, CancellationToken cancellationToken)
+	public async Task SetStatus(Order? order, OrderStatus newStatus, CancellationToken cancellationToken)
 	{
+		if (order is null)
+		{
+			_logger.LogDebug("Can't set status of null order to {newOrderStatus}", newStatus);
+			return;
+		}
+
 		_logger.LogInformation("Progressing order {orderId} from {currentOrderStatus} to {newOrderStatus}", order.OrderId, order.Status, newStatus);
 
 		var updatedOrder = order with { Status = newStatus };
@@ -208,7 +214,7 @@ public class OrderService
 		{
 			var originalOrder = await GetOrder(originalOrderId);
 
-			if (originalOrder.Status == OrderStatus.OrderComplete)
+			if (originalOrder?.Status == OrderStatus.OrderComplete)
 			{
 				OrderCompleted orderCompletedEvent = new(order.Username, originalOrder.OrderId);
 				await _dapr.PublishEventAsync(_pubsubName, _orderCompletedTopic, orderCompletedEvent, token);
