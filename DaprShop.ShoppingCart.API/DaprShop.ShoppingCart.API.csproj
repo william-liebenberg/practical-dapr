@@ -16,11 +16,4 @@
     <ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
     <ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="NSwag.AspNetCore" Version="14.0.2" />
-    <PackageReference Update="NSwag.MSBuild" Version="14.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>
