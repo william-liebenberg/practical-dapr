@@ -1,3 +1,4 @@
+using DaprShop.DaprExtensions;
 using DaprShop.Gateway.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
@@ -12,10 +13,7 @@ builder.Services
 	//.LoadFromConfig(builder.Configuration.GetSection("DaprReverseProxy"));
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) =>
-{
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("gateway-api"));
-});
+builder.Services.AddSingleton<ITelemetryInitializer>(new AppInsightsTelemetryInitializer("gateway-api"));
 
 builder.Services.AddEndpointsApiExplorer();
 

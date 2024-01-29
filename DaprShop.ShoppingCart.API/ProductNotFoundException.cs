@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace DaprShop.Shopping.API.Services
+namespace DaprShop.ShoppingCart.API
 {
 	[Serializable]
 	internal class ProductNotFoundException : Exception

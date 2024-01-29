@@ -1,11 +1,97 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Products API",
-    "description": "Product Service",
+    "title": "Users API",
+    "description": "User Management Service",
     "version": "v1"
   },
   "paths": {
+    "/users/healthz": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "GetUsersHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/get": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "GetUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/isRegistered": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "IsRegistered",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "RegisterUser",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/healthz": {
       "get": {
         "tags": [
@@ -94,12 +180,12 @@
         }
       }
     },
-    "/users/healthz": {
+    "/cart/healthz": {
       "get": {
         "tags": [
-          "Users"
+          "Cart"
         ],
-        "operationId": "GetUsersHealthz",
+        "operationId": "GetCartHealthz",
         "responses": {
           "200": {
             "description": ""
@@ -107,12 +193,12 @@
         }
       }
     },
-    "/users/get": {
+    "/cart/get": {
       "get": {
         "tags": [
-          "Users"
+          "Cart"
         ],
-        "operationId": "GetUser",
+        "operationId": "GetCart",
         "parameters": [
           {
             "name": "username",
@@ -131,42 +217,18 @@
         }
       }
     },
-    "/users/isRegistered": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "IsRegistered",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/users/register": {
+    "/cart/items": {
       "post": {
         "tags": [
-          "Users"
+          "Cart"
         ],
-        "operationId": "RegisterUser",
+        "operationId": "AddItem",
         "requestBody": {
-          "x-name": "request",
+          "x-name": "item",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterUserRequest"
+                "$ref": "#/components/schemas/AddProductItemToCart"
               }
             }
           },
@@ -179,10 +241,152 @@
           }
         }
       }
+    },
+    "/cart/submit": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "SubmitOrder",
+        "requestBody": {
+          "x-name": "req",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCartRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/healthz": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "GetOrdersHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/get": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "GetOrder",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/user": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "GetOrdersForUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/submit": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "ReceiveOrder",
+        "requestBody": {
+          "x-name": "order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/notifications/healthz": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "GetNotificationsHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "RegisterUserRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
+            "type": "string"
+          },
+          "Email": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "ProfileImageUrl": {
+            "type": "string"
+          }
+        }
+      },
       "AddProductRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -202,23 +406,87 @@
           }
         }
       },
-      "RegisterUserRequest": {
+      "AddProductItemToCart": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "Username": {
             "type": "string"
           },
-          "Email": {
+          "ProductId": {
             "type": "string"
           },
-          "DisplayName": {
-            "type": "string"
-          },
-          "ProfileImageUrl": {
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitCartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
             "type": "string"
           }
         }
+      },
+      "Order": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "OrderId": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "TotalAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "Status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          }
+        }
+      },
+      "OrderItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ProductId": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "OrderNew",
+          "OrderReceived",
+          "OrderProcessing",
+          "OrderComplete"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
       }
     }
   },

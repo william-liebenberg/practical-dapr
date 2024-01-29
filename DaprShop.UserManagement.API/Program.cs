@@ -1,3 +1,4 @@
+using DaprShop.DaprExtensions;
 using DaprShop.UserManagement.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
@@ -8,10 +9,7 @@ builder.Services.AddDaprClient();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) =>
-{
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("users-api"));
-});
+builder.Services.AddSingleton<ITelemetryInitializer>(new AppInsightsTelemetryInitializer("users-api"));
 
 builder.Services.AddEndpointsApiExplorer();
 

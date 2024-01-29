@@ -1,7 +1,7 @@
 using Dapr.Client;
 
-using DaprShop.Shopping.API;
-using DaprShop.Shopping.API.Services;
+using DaprShop.DaprExtensions;
+using DaprShop.ShoppingCart.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
 
@@ -15,10 +15,7 @@ builder.Services.AddKeyedScoped("users-api", (sp, _) => DaprClient.CreateInvokeH
 builder.Services.AddScoped<CartService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) =>
-{
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("cart-api"));
-});
+builder.Services.AddSingleton<ITelemetryInitializer>(new AppInsightsTelemetryInitializer("cart-api"));
 
 builder.Services.AddEndpointsApiExplorer();
 
