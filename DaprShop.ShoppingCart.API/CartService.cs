@@ -3,7 +3,7 @@ using Dapr.Client;
 using DaprShop.Contracts.Entities;
 using DaprShop.Contracts.Events;
 
-namespace DaprShop.Shopping.API.Services;
+namespace DaprShop.ShoppingCart.API;
 
 public class CartService
 {
@@ -16,7 +16,7 @@ public class CartService
 	private readonly string _cartTopic = "daprshop.cart.items";
 	private readonly string _ordersQueueTopic = "daprshop.orders.queue";
 
-	public CartService(ILogger<CartService> logger, DaprClient dapr, 
+	public CartService(ILogger<CartService> logger, DaprClient dapr,
 		[FromKeyedServices("products-api")] HttpClient productsHttpClient,
 		[FromKeyedServices("users-api")] HttpClient usersHttpClient)
 	{

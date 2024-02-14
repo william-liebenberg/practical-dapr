@@ -1,3 +1,4 @@
+using DaprShop.DaprExtensions;
 using DaprShop.Orders.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
@@ -11,10 +12,7 @@ builder.Services.AddHostedService<LongRunningService>();
 builder.Services.AddSingleton<BackgroundWorkerQueue>();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) =>
-{
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("orders-api"));
-});
+builder.Services.AddSingleton<ITelemetryInitializer>(new AppInsightsTelemetryInitializer("orders-api"));
 
 builder.Services.AddEndpointsApiExplorer();
 

@@ -1,16 +1,15 @@
 {
     "inputs": [
         {
+            "inputFile": "./DaprShop.UserManagement.API/wwwroot/api/v1/specification.json"
+        },{
             "inputFile": "./DaprShop.Products.API/wwwroot/api/v1/specification.json"
         },
         {
-            "inputFile": "./DaprShop.UserManagement.API/wwwroot/api/v1/specification.json"
+            "inputFile": "./DaprShop.ShoppingCart.API/wwwroot/api/v1/specification.json"
         },
         {
             "inputFile": "./DaprShop.Orders.API/wwwroot/api/v1/specification.json"
-        },
-        {
-            "inputFile": "./DaprShop.ShoppingCart.API/wwwroot/api/v1/specification.json"
         },
         {
             "inputFile": "./DaprShop.Notifications.API/wwwroot/api/v1/specification.json"

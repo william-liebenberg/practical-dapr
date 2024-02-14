@@ -1,7 +1,7 @@
 ﻿using DaprShop.Contracts.Entities;
 using DaprShop.Contracts.Events;
 using DaprShop.Contracts.Requests;
-using DaprShop.Shopping.API.Services;
+using DaprShop.ShoppingCart.API;
 
 using Microsoft.AspNetCore.Mvc;
 
