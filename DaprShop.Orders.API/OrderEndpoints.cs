@@ -13,7 +13,7 @@ public static class OrderEndpoints
 			.MapGroup("orders")
 			.WithTags(new[] { "Orders" });
 
-		orders.MapGet("healthz", () => { return Results.Ok(); });
+		//orders.MapGet("healthz", () => { return Results.Ok(); });
 
 		orders.MapGet("get", async (string orderId, [FromServices] OrderService orderService) =>
 		{

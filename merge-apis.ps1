@@ -43,7 +43,7 @@ foreach($specFile in $specFiles) {
     try {
         $spec = Get-Content -Path $specFile -Raw | ConvertFrom-Json
         $merged = Merge-Objects $spec $merged
-        Write-Host "...✅ Done!"
+        Write-Host "... ✅ Done!"
     }
     catch {
         Write-Host "... ❌ Failed! $($_.Exception.Message)" -ForegroundColor Red

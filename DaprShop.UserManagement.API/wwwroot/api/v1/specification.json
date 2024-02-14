@@ -7,19 +7,6 @@
     "version": "v1"
   },
   "paths": {
-    "/users/healthz": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "GetUsersHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/users/get": {
       "get": {
         "tags": [

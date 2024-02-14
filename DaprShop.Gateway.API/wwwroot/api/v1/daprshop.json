@@ -1,17 +1,79 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Users API",
-    "description": "User Management Service",
+    "title": "Products API",
+    "description": "Product Service",
     "version": "v1"
   },
   "paths": {
-    "/users/healthz": {
+    "/products/add": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "AddProduct",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/products/get": {
       "get": {
         "tags": [
-          "Users"
+          "Products"
         ],
-        "operationId": "GetUsersHealthz",
+        "operationId": "GetProduct",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/products/catalogue": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "GetCatalogue",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/products/seed": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Seed",
         "responses": {
           "200": {
             "description": ""
@@ -92,53 +154,15 @@
         }
       }
     },
-    "/products/healthz": {
+    "/orders/get": {
       "get": {
         "tags": [
-          "Products"
+          "Orders"
         ],
-        "operationId": "GetProductsHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/products/add": {
-      "post": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "AddProduct",
-        "requestBody": {
-          "x-name": "request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddProductRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/products/get": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "GetProduct",
+        "operationId": "GetOrder",
         "parameters": [
           {
-            "name": "productId",
+            "name": "orderId",
             "in": "query",
             "required": true,
             "schema": {
@@ -154,12 +178,23 @@
         }
       }
     },
-    "/products/catalogue": {
+    "/orders/user": {
       "get": {
         "tags": [
-          "Products"
+          "Orders"
         ],
-        "operationId": "GetCatalogue",
+        "operationId": "GetOrdersForUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -167,25 +202,24 @@
         }
       }
     },
-    "/products/seed": {
+    "/orders/submit": {
       "post": {
         "tags": [
-          "Products"
+          "Orders"
         ],
-        "operationId": "Seed",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/healthz": {
-      "get": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "GetCartHealthz",
+        "operationId": "ReceiveOrder",
+        "requestBody": {
+          "x-name": "order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": ""
@@ -266,152 +300,10 @@
           }
         }
       }
-    },
-    "/orders/healthz": {
-      "get": {
-        "tags": [
-          "Orders"
-        ],
-        "operationId": "GetOrdersHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/orders/get": {
-      "get": {
-        "tags": [
-          "Orders"
-        ],
-        "operationId": "GetOrder",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/orders/user": {
-      "get": {
-        "tags": [
-          "Orders"
-        ],
-        "operationId": "GetOrdersForUser",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/orders/submit": {
-      "post": {
-        "tags": [
-          "Orders"
-        ],
-        "operationId": "ReceiveOrder",
-        "requestBody": {
-          "x-name": "order",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/notifications/healthz": {
-      "get": {
-        "tags": [
-          "Notifications"
-        ],
-        "operationId": "GetNotificationsHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/notifications/OrderCompleted": {
-      "post": {
-        "tags": [
-          "Notifications"
-        ],
-        "operationId": "ReceiveCompletedOrder",
-        "requestBody": {
-          "x-name": "orderCompletedEvent",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderCompleted"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
-      "RegisterUserRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Username": {
-            "type": "string"
-          },
-          "Email": {
-            "type": "string"
-          },
-          "DisplayName": {
-            "type": "string"
-          },
-          "ProfileImageUrl": {
-            "type": "string"
-          }
-        }
-      },
       "AddProductRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -431,27 +323,20 @@
           }
         }
       },
-      "AddProductItemToCart": {
+      "RegisterUserRequest": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "Username": {
             "type": "string"
           },
-          "ProductId": {
+          "Email": {
             "type": "string"
           },
-          "Quantity": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "SubmitCartRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Username": {
+          "DisplayName": {
+            "type": "string"
+          },
+          "ProfileImageUrl": {
             "type": "string"
           }
         }
@@ -513,17 +398,28 @@
           3
         ]
       },
-      "OrderCompleted": {
+      "AddProductItemToCart": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "Username": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "OrderId": {
-            "type": "string",
-            "nullable": true
+          "ProductId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitCartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
+            "type": "string"
           }
         }
       }

@@ -7,19 +7,6 @@
     "version": "v1"
   },
   "paths": {
-    "/orders/healthz": {
-      "get": {
-        "tags": [
-          "Orders"
-        ],
-        "operationId": "GetOrdersHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/orders/get": {
       "get": {
         "tags": [

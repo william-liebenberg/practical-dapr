@@ -54,7 +54,7 @@ app.UseSwaggerUi(c =>
 	c.DocExpansion = "list";
 });
 
-app.MapGet("healthz", () => { return Results.Ok(); });
+// app.MapGet("healthz", () => { return Results.Ok(); });
 
 app.MapGet("info", ([FromServices] IConfiguration config) =>
 {
