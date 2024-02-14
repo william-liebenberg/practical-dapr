@@ -7,9 +7,9 @@ common: # optional section for variables shared across apps
   appProtocol: http
   #app-protocol: https
   # enableAppHealthCheck: false
-  # appHealthProbeInterval: 1
+  # appHealthProbeInterval: 30
   # appHealthProbeTimeout: 500
-  # appHealthThreshold: 3
+  # appHealthThreshold: 1
   env:  # any environment variable shared across apps
     DEBUG: true
 apps:
@@ -22,30 +22,36 @@ apps:
   - appID: notifications-api
     appDirPath: ./DaprShop.Notifications.API/
     appPort: 7196
-    daprHTTPPort: 3501
-    appHealthCheckPath: /notifications/healthz
-    command: ["dotnet", "run", "DaprShop.Notifications.API.csproj", "-lp", "https", "--no-build"]
+    #daprHTTPPort: 3501
+    #appHealthCheckPath: /notifications/healthz
+    command: ["dotnet", "run", "--project", "DaprShop.Notifications.API.csproj", "--no-build", "--launch-profile", "https"]
   - appID: orders-api
     appDirPath: ./DaprShop.Orders.API/
     appPort: 7233
-    daprHTTPPort: 3502
-    appHealthCheckPath: /orders/healthz
-    command: ["dotnet", "run", "DaprShop.Orders.API.csproj", "-lp", "https", "--no-build"]
+    #daprHTTPPort: 3502
+    #appHealthCheckPath: /orders/healthz
+    command: ["dotnet", "run", "--project", "DaprShop.Orders.API.csproj", "--no-build", "--launch-profile", "https"]
   - appID: products-api
     appDirPath: ./DaprShop.Products.API/
     appPort: 7084
-    daprHTTPPort: 3503
-    appHealthCheckPath: /products/healthz
-    command: ["dotnet", "run", "DaprShop.Products.API.csproj", "-lp", "https", "--no-build"]
+    #daprHTTPPort: 3503
+    #appHealthCheckPath: /products/healthz
+    command: ["dotnet", "run", "--project", "DaprShop.Products.API.csproj", "--no-build", "--launch-profile", "https"]
   - appID: cart-api
     appDirPath: ./DaprShop.ShoppingCart.API/
     appPort: 7283
-    daprHTTPPort: 3504
-    appHealthCheckPath: /cart/healthz
-    command: ["dotnet", "run", "DaprShop.ShoppingCart.API.csproj", "-lp", "https", "--no-build"]
+    #daprHTTPPort: 3504
+    #appHealthCheckPath: /cart/healthz
+    command: ["dotnet", "run", "--project", "DaprShop.ShoppingCart.API.csproj", "--no-build", "--launch-profile", "https"]
   - appID: users-api
     appDirPath: ./DaprShop.UserManagement.API/
     appPort: 7108
-    daprHTTPPort: 3505
-    appHealthCheckPath: /users/healthz
-    command: ["dotnet", "run", "DaprShop.UserManagement.API.csproj", "-lp", "https", "--no-build"]
+    #daprHTTPPort: 3505
+    #appHealthCheckPath: /users/healthz
+    command: ["dotnet", "run", "--project", "DaprShop.UserManagement.API.csproj", "--no-build", "--launch-profile", "https"]
+  - appID: gateway-api
+    appDirPath: ./DaprShop.Gateway.API/
+    appPort: 7192
+    daprHTTPPort: 3500
+    #appHealthCheckPath: /healthz
+    command: ["dotnet", "run", "--project", "DaprShop.Gateway.API.csproj", "--no-build", "--launch-profile", "https"]

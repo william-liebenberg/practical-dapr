@@ -8,18 +8,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Contracts", "DaprS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43EC5F4-345E-4772-9AE2-49F189A8D21A}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		dapr.yaml = dapr.yaml
 		Directory.Build.props = Directory.Build.props
+		docker-compose.override.yaml = docker-compose.override.yaml
+		docker-compose.yaml = docker-compose.yaml
 		global.json = global.json
-		merge-apis.ps1 = merge-apis.ps1
 		nswag.json = nswag.json
+		openapi-merge.json = openapi-merge.json
+		package.json = package.json
 		readme.md = readme.md
 		run.ps1 = run.ps1
 		.github\workflows\run-workflows.ps1 = .github\workflows\run-workflows.ps1
+		run.ps1 = run.ps1
 		secrets.json = secrets.json
 		start-dapr-sidecars.cmd = start-dapr-sidecars.cmd
+		stop.ps1 = stop.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.UserManagement.API", "DaprShop.UserManagement.API\DaprShop.UserManagement.API.csproj", "{FCAE531D-C4C2-4888-BDFD-A79E566BA22F}"

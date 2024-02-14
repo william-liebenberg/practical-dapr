@@ -1,11 +1,11 @@
 $resourceGroupName = "aca-dapr-shop"
 $registryName="acadaprshop.azurecr.io"
 $registryUsername="acadaprshop"
-$registryPassword="xxx"
-$subscriptionId="xxx"
+$registryPassword="F5pzejsBAa/tbVM4tuPxunrUvxmypV+kyI+sFVJV1h+ACRDyLavJ"
+$subscriptionId="5fb293a6-c2ac-4ee7-bad0-15d8f4376034"
 $sendgridApiKey="SG.xxx"
 
-az group create --name $resourceGroupName --location australiaeast
+# az group create --name $resourceGroupName --location australiaeast
 
 az deployment group create `
     --resource-group $resourceGroupName `
