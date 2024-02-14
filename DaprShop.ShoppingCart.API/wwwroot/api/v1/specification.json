@@ -7,19 +7,6 @@
     "version": "v1"
   },
   "paths": {
-    "/cart/healthz": {
-      "get": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "GetCartHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/cart/get": {
       "get": {
         "tags": [

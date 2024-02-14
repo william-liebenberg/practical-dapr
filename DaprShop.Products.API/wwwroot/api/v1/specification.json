@@ -7,19 +7,6 @@
     "version": "v1"
   },
   "paths": {
-    "/products/healthz": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "GetProductsHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/products/add": {
       "post": {
         "tags": [

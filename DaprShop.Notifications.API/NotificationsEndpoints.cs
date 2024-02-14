@@ -16,7 +16,7 @@ public static class NotificationsEndpoints
 			.MapGroup("notifications")
 			.WithTags(new[] { "Notifications" });
 
-		notifications.MapGet("healthz", () => { return Results.Ok(); });
+		// notifications.MapGet("healthz", () => { return Results.Ok(); });
 
 		// notifications.MapPost("OrderCompleted", async ([FromBody] OrderCompleted orderCompletedEvent) =>
 		// {

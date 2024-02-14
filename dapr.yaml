@@ -4,7 +4,7 @@ common: # optional section for variables shared across apps
   appLogDestination: fileAndConsole # (optional), can be file, console or fileAndConsole. default is fileAndConsole.
   daprdLogDestination: file # (optional), can be file, console or fileAndConsole. default is file.
   appSSL: true
-  appProtocol: http
+  #appProtocol: http
   #app-protocol: https
   # enableAppHealthCheck: false
   # appHealthProbeInterval: 30
@@ -13,12 +13,6 @@ common: # optional section for variables shared across apps
   env:  # any environment variable shared across apps
     DEBUG: true
 apps:
-  - appID: gateway-api
-    appDirPath: ./DaprShop.Gateway.API/
-    appPort: 7192
-    daprHTTPPort: 3500
-    appHealthCheckPath: /healthz
-    command: ["dotnet", "run", "DaprShop.Gateway.API.csproj", "-lp", "https", "--no-build"]
   - appID: notifications-api
     appDirPath: ./DaprShop.Notifications.API/
     appPort: 7196
@@ -52,6 +46,6 @@ apps:
   - appID: gateway-api
     appDirPath: ./DaprShop.Gateway.API/
     appPort: 7192
-    daprHTTPPort: 3500
+    #daprHTTPPort: 3500
     #appHealthCheckPath: /healthz
     command: ["dotnet", "run", "--project", "DaprShop.Gateway.API.csproj", "--no-build", "--launch-profile", "https"]

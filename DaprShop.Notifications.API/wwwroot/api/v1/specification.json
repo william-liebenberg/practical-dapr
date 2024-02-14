@@ -6,20 +6,5 @@
     "description": "Notifications Service",
     "version": "v1"
   },
-  "paths": {
-    "/notifications/healthz": {
-      "get": {
-        "tags": [
-          "Notifications"
-        ],
-        "operationId": "GetNotificationsHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    }
-  },
   "components": {}
 }

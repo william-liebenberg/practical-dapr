@@ -16,7 +16,7 @@ public static class ProductEndpoints
 			.MapGroup("products")
 			.WithTags(new[] { "Products" });
 
-		endpoints.MapGet("healthz", () => { return Results.Ok(); });
+		//endpoints.MapGet("healthz", () => { return Results.Ok(); });
 
 		endpoints.MapPost("add", async ([FromBody] AddProductRequest request, [FromServices] ProductService productService) =>
 		{

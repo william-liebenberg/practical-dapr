@@ -1,0 +1,54 @@
+version: '3.4'
+
+services:
+
+  maildev:
+    image: maildev/maildev:latest
+
+  redis:
+    image: redis:alpine
+
+  # Use the Azure SQL Edge version so we can also run on Apple Sillicon (thanks @ChristianWeyer)
+  sqldata:
+    image: mcr.microsoft.com/azure-sql-edge
+
+  zipkin:
+    image: openzipkin/zipkin-slim:latest
+
+  basket-api:
+    image: ${REGISTRY:-daprshop}/basket.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Basket/Basket.API/Dockerfile
+    depends_on:
+      - identity-api
+      - redis
+
+  basket-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:basket-api"
+    depends_on:
+      - basket-api
+
+  blazor-client:
+    image: ${REGISTRY:-eshopdapr}/blazor.client:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Web/BlazorClient.Host/Dockerfile
+
+  catalog-api:
+    image: ${REGISTRY:-eshopdapr}/catalog.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Catalog/Catalog.API/Dockerfile
+    depends_on:
+      - sqldata
+
+  catalog-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:catalog-api"
+    depends_on:
+      - catalog-api
+
+  dapr-placement:
+    image: "daprio/dapr:1.9.4"

@@ -6,19 +6,6 @@
     "version": "v1"
   },
   "paths": {
-    "/products/healthz": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "operationId": "GetProductsHealthz",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/products/add": {
       "post": {
         "tags": [
@@ -87,19 +74,6 @@
           "Products"
         ],
         "operationId": "Seed",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/users/healthz": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "GetUsersHealthz",
         "responses": {
           "200": {
             "description": ""
@@ -179,6 +153,153 @@
           }
         }
       }
+    },
+    "/orders/get": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "GetOrder",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/user": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "GetOrdersForUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/orders/submit": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "ReceiveOrder",
+        "requestBody": {
+          "x-name": "order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cart/get": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "GetCart",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "AddItem",
+        "requestBody": {
+          "x-name": "item",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductItemToCart"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cart/submit": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "SubmitOrder",
+        "requestBody": {
+          "x-name": "req",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCartRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
@@ -216,6 +337,88 @@
             "type": "string"
           },
           "ProfileImageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "OrderId": {
+            "type": "string"
+          },
+          "Username": {
+            "type": "string"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "TotalAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "Status": {
+            "$ref": "#/components/schemas/OrderStatus"
+          }
+        }
+      },
+      "OrderItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ProductId": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "OrderNew",
+          "OrderReceived",
+          "OrderProcessing",
+          "OrderComplete"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "AddProductItemToCart": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
+            "type": "string"
+          },
+          "ProductId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitCartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
             "type": "string"
           }
         }
