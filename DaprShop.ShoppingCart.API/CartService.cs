@@ -16,20 +16,22 @@ public class CartService
 	private readonly string _cartTopic = "daprshop.cart.items";
 	private readonly string _ordersQueueTopic = "daprshop.orders.queue";
 
-	public CartService(ILogger<CartService> logger, DaprClient dapr,
-		[FromKeyedServices("products-api")] HttpClient productsHttpClient,
-		[FromKeyedServices("users-api")] HttpClient usersHttpClient)
+	public CartService(ILogger<CartService> logger, DaprClient dapr)
+		//[FromKeyedServices("products-api")] HttpClient productsHttpClient,
+		//[FromKeyedServices("users-api")] HttpClient usersHttpClient)
 	{
 		_logger = logger;
 		_dapr = dapr;
-		_productsHttpClient = productsHttpClient;
-		_usersHttpClient = usersHttpClient;
+		//_productsHttpClient = productsHttpClient;
+		//_usersHttpClient = usersHttpClient;
+		_productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
+		_usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
+
 	}
 
 	public async Task AddItemToShoppingCart(string username, string productId, int quantity)
 	{
 		// first check if product is valid (and in stock) by calling product service to get details of Product (via productId)
-		//var productsHttpClient = DaprClient.CreateInvokeHttpClient("products-api");
 		var product = await _productsHttpClient.GetFromJsonAsync<Product>($"products/get?productId={productId}");
 		if (product == null)
 		{
@@ -42,7 +44,6 @@ public class CartService
 		}
 
 		// check if the user is valid (registered) by calling the user service to get the details of the User (via username)
-		//var usersHttpClient = DaprClient.CreateInvokeHttpClient("users-api");
 		var user = await _usersHttpClient.GetFromJsonAsync<User>($"users/get?username={username}");
 		if (user == null)
 		{

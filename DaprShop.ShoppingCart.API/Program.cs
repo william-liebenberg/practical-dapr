@@ -1,4 +1,4 @@
-using Dapr.Client;
+//using Dapr.Client;
 
 using DaprShop.DaprExtensions;
 using DaprShop.ShoppingCart.API;
@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
 
-builder.Services.AddKeyedScoped("products-api", (sp, _) => DaprClient.CreateInvokeHttpClient("products-api"));
-builder.Services.AddKeyedScoped("users-api", (sp, _) => DaprClient.CreateInvokeHttpClient("users-api"));
+//builder.Services.AddKeyedScoped("products-api", (sp, _) => DaprClient.CreateInvokeHttpClient("products-api"));
+//builder.Services.AddKeyedScoped("users-api", (sp, _) => DaprClient.CreateInvokeHttpClient("users-api"));
 
 builder.Services.AddScoped<CartService>();
 
