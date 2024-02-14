@@ -1,4 +1,4 @@
-$resourceGroupName = "aca-dapr-shop"
+$resourceGroupName = "aca-dapr-shop-ndc"
 $registryName="acadaprshop.azurecr.io"
 $registryUsername="acadaprshop"
 $registryPassword="F5pzejsBAa/tbVM4tuPxunrUvxmypV+kyI+sFVJV1h+ACRDyLavJ"
