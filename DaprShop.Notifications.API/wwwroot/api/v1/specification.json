@@ -19,7 +19,49 @@
           }
         }
       }
+    },
+    "/notifications/OrderCompleted": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ReceiveCompletedOrder",
+        "requestBody": {
+          "x-name": "orderCompletedEvent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCompleted"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "OrderCompleted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
+            "type": "string",
+            "nullable": true
+          },
+          "OrderId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
 }
