@@ -22,7 +22,7 @@ on:
 env:
   CONTAINER_APP_CONTAINER_NAME: products-api
   CONTAINER_APP_NAME: products-api
-  CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop
+  CONTAINER_APP_RESOURCE_GROUP_NAME: aca-dapr-shop-ndc
   CONTAINER_REGISTRY_LOGIN_SERVER: acadaprshop.azurecr.io
   
   # the csproj name - dots are converted to dashes
