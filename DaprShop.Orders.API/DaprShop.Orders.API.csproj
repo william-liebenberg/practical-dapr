@@ -9,10 +9,5 @@
   <ItemGroup>
     <PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
     <PackageReference Include="Dapr.Client" Version="1.12.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
-    <ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj" />
   </ItemGroup>
 </Project>

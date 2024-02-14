@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43E
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		dapr.yaml = dapr.yaml
 		Directory.Build.props = Directory.Build.props
 		docker-compose.override.yaml = docker-compose.override.yaml
 		docker-compose.yaml = docker-compose.yaml
@@ -20,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".common", ".common", "{B43E
 		openapi-merge.json = openapi-merge.json
 		package.json = package.json
 		readme.md = readme.md
-		run.ps1 = run.ps1
 		.github\workflows\run-workflows.ps1 = .github\workflows\run-workflows.ps1
 		run.ps1 = run.ps1
 		secrets.json = secrets.json
@@ -36,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Orders.API", "Dapr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Gateway.API", "DaprShop.Gateway.API\DaprShop.Gateway.API.csproj", "{0628D502-1110-487E-A512-2A36999C7D88}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.DaprExtensions", "DaprShop.DaprExtensions\DaprShop.DaprExtensions.csproj", "{798FCF58-A88D-41A7-B238-39E79EF95F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaprShop.Extensions", "DaprShop.DaprExtensions\DaprShop.Extensions.csproj", "{798FCF58-A88D-41A7-B238-39E79EF95F4A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr-components", "dapr-components", "{C6EAA860-164F-40B6-812E-5D31CC229960}"
 	ProjectSection(SolutionItems) = preProject

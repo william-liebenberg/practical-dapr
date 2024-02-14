@@ -6,5 +6,62 @@
     "description": "Notifications Service",
     "version": "v1"
   },
-  "components": {}
+  "paths": {
+    "/notifications/healthz": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "GetNotificationsHealthz",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/notifications/OrderCompleted": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ReceiveCompletedOrder",
+        "requestBody": {
+          "x-name": "orderCompletedEvent",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCompleted"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OrderCompleted": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "Username": {
+            "type": "string",
+            "nullable": true
+          },
+          "OrderId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
 }

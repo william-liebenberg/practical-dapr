@@ -7,6 +7,11 @@
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\DaprShop.Contracts\DaprShop.Contracts.csproj" />
+        <ProjectReference Include="..\DaprShop.DaprExtensions\DaprShop.Extensions.csproj" />
+    </ItemGroup>
+    
     <ItemGroup Condition="'$(ExportApiDocumentationOnBuild)' == 'true'">
         <PackageReference Include="NSwag.AspNetCore" Version="14.0.2" />
         <PackageReference Include="NSwag.MSBuild" Version="14.0.2">

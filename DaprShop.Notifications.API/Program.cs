@@ -1,3 +1,4 @@
+using DaprShop.DaprExtensions;
 using DaprShop.Notifications.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
@@ -9,10 +10,7 @@ builder.Services.AddDaprClient();
 // TODO: Add Email service
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.Configure<TelemetryConfiguration>((o) =>
-{
-	o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer("notifications-api"));
-});
+builder.Services.AddSingleton<ITelemetryInitializer>(new AppInsightsTelemetryInitializer("notifications-api"));
 
 builder.Services.AddEndpointsApiExplorer();
 
