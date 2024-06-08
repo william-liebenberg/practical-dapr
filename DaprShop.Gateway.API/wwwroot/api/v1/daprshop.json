@@ -1,11 +1,84 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Products API",
-    "description": "Product Service",
+    "title": "Users API",
+    "description": "User Management Service",
     "version": "v1"
   },
   "paths": {
+    "/users/get": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "GetUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/isRegistered": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "IsRegistered",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "RegisterUser",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUserRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/products/add": {
       "post": {
         "tags": [
@@ -81,12 +154,12 @@
         }
       }
     },
-    "/users/get": {
+    "/cart/get": {
       "get": {
         "tags": [
-          "Users"
+          "Cart"
         ],
-        "operationId": "GetUser",
+        "operationId": "GetCart",
         "parameters": [
           {
             "name": "username",
@@ -105,42 +178,43 @@
         }
       }
     },
-    "/users/isRegistered": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "IsRegistered",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/users/register": {
+    "/cart/items": {
       "post": {
         "tags": [
-          "Users"
+          "Cart"
         ],
-        "operationId": "RegisterUser",
+        "operationId": "AddItem",
         "requestBody": {
-          "x-name": "request",
+          "x-name": "item",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterUserRequest"
+                "$ref": "#/components/schemas/AddProductItemToCart"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cart/submit": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "operationId": "SubmitOrder",
+        "requestBody": {
+          "x-name": "req",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCartRequest"
               }
             }
           },
@@ -227,67 +301,18 @@
         }
       }
     },
-    "/cart/get": {
-      "get": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "GetCart",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/items": {
+    "/notifications/OrderCompleted": {
       "post": {
         "tags": [
-          "Cart"
+          "Notifications"
         ],
-        "operationId": "AddItem",
+        "operationId": "ReceiveCompletedOrder",
         "requestBody": {
-          "x-name": "item",
+          "x-name": "orderCompletedEvent",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddProductItemToCart"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/cart/submit": {
-      "post": {
-        "tags": [
-          "Cart"
-        ],
-        "operationId": "SubmitOrder",
-        "requestBody": {
-          "x-name": "req",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCartRequest"
+                "$ref": "#/components/schemas/OrderCompleted"
               }
             }
           },
@@ -304,39 +329,64 @@
   },
   "components": {
     "schemas": {
-      "AddProductRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Name": {
-            "type": "string"
-          },
-          "Description": {
-            "type": "string"
-          },
-          "UnitPrice": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "ImageUrl": {
-            "type": "string"
-          }
-        }
-      },
       "RegisterUserRequest": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "Username": {
+          "username": {
             "type": "string"
           },
-          "Email": {
+          "email": {
             "type": "string"
           },
-          "DisplayName": {
+          "displayName": {
             "type": "string"
           },
-          "ProfileImageUrl": {
+          "profileImageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "AddProductRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "AddProductItemToCart": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitCartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
             "type": "string"
           }
         }
@@ -345,26 +395,26 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "OrderId": {
+          "orderId": {
             "type": "string"
           },
-          "Username": {
+          "username": {
             "type": "string"
           },
-          "Title": {
+          "title": {
             "type": "string"
           },
-          "TotalAmount": {
+          "totalAmount": {
             "type": "number",
             "format": "decimal"
           },
-          "Items": {
+          "items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/OrderItem"
             }
           },
-          "Status": {
+          "status": {
             "$ref": "#/components/schemas/OrderStatus"
           }
         }
@@ -373,11 +423,11 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "Quantity": {
+          "quantity": {
             "type": "integer",
             "format": "int32"
           },
-          "ProductId": {
+          "productId": {
             "type": "string"
           }
         }
@@ -398,32 +448,21 @@
           3
         ]
       },
-      "AddProductItemToCart": {
+      "OrderCompleted": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "Username": {
-            "type": "string"
+          "username": {
+            "type": "string",
+            "nullable": true
           },
-          "ProductId": {
-            "type": "string"
-          },
-          "Quantity": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "SubmitCartRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "Username": {
-            "type": "string"
+          "orderId": {
+            "type": "string",
+            "nullable": true
           }
         }
       }
     }
   },
-  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))"
+  "x-generator": "NSwag v14.0.7.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))"
 }

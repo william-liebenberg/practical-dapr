@@ -13,8 +13,8 @@
     </ItemGroup>
     
     <ItemGroup Condition="'$(ExportApiDocumentationOnBuild)' == 'true'">
-        <PackageReference Include="NSwag.AspNetCore" Version="14.0.2" />
-        <PackageReference Include="NSwag.MSBuild" Version="14.0.2">
+        <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
+        <PackageReference Include="NSwag.MSBuild" Version="14.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

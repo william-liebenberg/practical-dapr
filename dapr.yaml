@@ -4,12 +4,6 @@ common: # optional section for variables shared across apps
   appLogDestination: fileAndConsole # (optional), can be file, console or fileAndConsole. default is fileAndConsole.
   daprdLogDestination: file # (optional), can be file, console or fileAndConsole. default is file.
   appSSL: true
-  #appProtocol: http
-  #app-protocol: https
-  # enableAppHealthCheck: false
-  # appHealthProbeInterval: 30
-  # appHealthProbeTimeout: 500
-  # appHealthThreshold: 1
   env:  # any environment variable shared across apps
     DEBUG: true
 apps:

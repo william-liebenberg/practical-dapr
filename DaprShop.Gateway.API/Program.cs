@@ -2,8 +2,9 @@ using DaprShop.DaprExtensions;
 using DaprShop.Gateway.API;
 
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+
+using SwaggerThemes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,14 @@ app.UseStaticFiles();
 
 app.UseSwaggerUi(c =>
 {
+	// fix the swagger-ui Universal Dark theme to show the summary description with more contrast
+	string customCss = @"
+.swagger-ui .opblock .opblock-summary-description {
+    color: var(--secondary-text-color);
+}";
+
+	c.CustomInlineStyles = SwaggerTheme.GetSwaggerThemeCss(Theme.UniversalDark) + "\n" + customCss;
+	
 	// set the swagger ui prefix
 	c.Path = "/api";
 

@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.0.7.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Users API",
@@ -87,16 +87,16 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "Username": {
+          "username": {
             "type": "string"
           },
-          "Email": {
+          "email": {
             "type": "string"
           },
-          "DisplayName": {
+          "displayName": {
             "type": "string"
           },
-          "ProfileImageUrl": {
+          "profileImageUrl": {
             "type": "string"
           }
         }

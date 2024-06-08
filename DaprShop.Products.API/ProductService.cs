@@ -107,7 +107,10 @@ public class ProductService
 	// All
 	public async Task<IEnumerable<Product>> ListAll()
 	{
-		string query = "{}";
+		var query = "{" +
+			"\"filter\": {" +
+			//"\"EQ\": { \"category\": \"" + category + "\" }" +
+			"}}";
 
 		try
 		{

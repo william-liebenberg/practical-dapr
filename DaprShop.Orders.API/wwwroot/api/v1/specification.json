@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.0.2.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.0.7.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Orders API",
@@ -87,26 +87,26 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "OrderId": {
+          "orderId": {
             "type": "string"
           },
-          "Username": {
+          "username": {
             "type": "string"
           },
-          "Title": {
+          "title": {
             "type": "string"
           },
-          "TotalAmount": {
+          "totalAmount": {
             "type": "number",
             "format": "decimal"
           },
-          "Items": {
+          "items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/OrderItem"
             }
           },
-          "Status": {
+          "status": {
             "$ref": "#/components/schemas/OrderStatus"
           }
         }
@@ -115,11 +115,11 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "Quantity": {
+          "quantity": {
             "type": "integer",
             "format": "int32"
           },
-          "ProductId": {
+          "productId": {
             "type": "string"
           }
         }
